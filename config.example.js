@@ -25,7 +25,7 @@ module.exports = {
 	],
 
 	MASKS: [
-		"?h?h?h?h?h?h?h?h"
+		"./hashcat/masks"
 	],
 
 	// File paths
