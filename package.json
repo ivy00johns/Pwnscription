@@ -1,0 +1,46 @@
+{
+	"name": "pwnagotchi-tools",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"cli": "node ./cli/cli.mjs",
+		"get": "node ./pwnagetty/pwnagetty-get-pcaps.js",
+		"vagrant-up": "cd ./windows/vagrant && vagrant up --provision",
+		"vagrant-destroy": "cd ./windows/vagrant && vagrant destroy -f",
+		"generate": "node ./pwnagetty/pwnagetty-generate.js",
+		"attacks": "node ./scripts/generate-attacks-list.js",
+		"scripts": "npm run attacks && node ./scripts/generate-hashcat-scripts.js && chmod +x ./hashcat/attack-scripts/*",
+		"results": "node ./scripts/cracked-networks-results.js",
+		"passwords": "node ./scripts/custom-wordlist-generator.js",
+		"combos": "node ./hashcat/generator/wordlist-combinations-generator.js",
+		"most": "npm run generate && npm run attacks && npm run scripts",
+		"all": "npm run get && npm run most"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ivy00johns/pwnagotchi-tools.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/ivy00johns/pwnagotchi-tools/issues"
+	},
+	"homepage": "https://github.com/ivy00johns/pwnagotchi-tools#readme",
+	"dependencies": {
+		"chalk": "^5.3.0",
+		"clear": "^0.1.0",
+		"clipboardy": "^4.0.0",
+		"clui": "^0.3.6",
+		"commander": "^11.1.0",
+		"configstore": "^6.0.0",
+		"figlet": "^1.7.0",
+		"fs": "^0.0.1-security",
+		"inquirer": "^9.2.12",
+		"minimist": "^1.2.8",
+		"ssh2": "^1.14.0",
+		"ssh2-sftp-client": "^9.1.0",
+		"table": "^6.8.1"
+	}
+}
