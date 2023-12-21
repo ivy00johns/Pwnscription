@@ -1,9 +1,9 @@
-main.name = ""
+main.name = "pwnagotchi"
 main.lang = "en"
 main.confd = "/etc/pwnagotchi/conf.d/"
 main.custom_plugins = ""
 main.custom_plugin_repos = [
-  "https://github.com/evilsocket/pwnagotchi-plugins-contrib/archive/master.zip"
+	"https://github.com/evilsocket/pwnagotchi-plugins-contrib/archive/master.zip"
 ]
 main.iface = "mon0"
 main.mon_start_cmd = "/usr/bin/monstart"
@@ -11,17 +11,17 @@ main.mon_stop_cmd = "/usr/bin/monstop"
 main.mon_max_blind_epochs = 50
 main.no_restart = false
 main.whitelist = [
-  "EXAMPLE_NETWORK",
-  "ANOTHER_EXAMPLE_NETWORK",
-  "fo:od:ba:be:fo:od",
-  "fo:od:ba"
+	"EXAMPLE_NETWORK",
+	"ANOTHER_EXAMPLE_NETWORK",
+	"fo:od:ba:be:fo:od",
+	"fo:od:ba"
 ]
 main.filter = ""
 
 main.plugins.grid.enabled = true
 main.plugins.grid.report = false
 main.plugins.grid.exclude = [
-  "YourHomeNetworkHere"
+	"YourHomeNetworkHere"
 ]
 
 main.plugins.auto-update.enabled = true
@@ -211,18 +211,18 @@ bettercap.username = "pwnagotchi"
 bettercap.password = "pwnagotchi"
 bettercap.handshakes = "/root/handshakes"
 bettercap.silence = [
-  "ble.device.new",
-  "ble.device.lost",
-  "ble.device.disconnected",
-  "ble.device.connected",
-  "ble.device.service.discovered",
-  "ble.device.characteristic.discovered",
-  "wifi.client.new",
-  "wifi.client.lost",
-  "wifi.client.probe",
-  "wifi.ap.new",
-  "wifi.ap.lost",
-  "mod.started"
+	"ble.device.new",
+	"ble.device.lost",
+	"ble.device.disconnected",
+	"ble.device.connected",
+	"ble.device.service.discovered",
+	"ble.device.characteristic.discovered",
+	"wifi.client.new",
+	"wifi.client.lost",
+	"wifi.client.probe",
+	"wifi.ap.new",
+	"wifi.ap.lost",
+	"mod.started"
 ]
 
 fs.memory.enabled = false
