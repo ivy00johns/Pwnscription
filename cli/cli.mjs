@@ -220,13 +220,13 @@ function generateCustomCommand(hccapx, wordlist, rules, useMasks, customMask) {
 
 	if (wordlist !== "NONE" && rules !== "NONE") {
 		if (useMasks) {
-			return `hashcat --hash-type=${config.HASH_TYPE} --attack-mode=0 --session ${sessionName} --hwmon-temp-abort=${config.ABORT_TEMPERATURE} -w ${config.ABORT_WAIT_TIME} --potfile-path "${potfilePath}" --outfile "${outputPath}" "${hccapxPath}" --rules-file="${rulePath}" "${wordlistPath}" "${maskPath}"`;
+			return `hashcat --hash-type=${config.HASH_TYPE} --attack-mode=9 --session ${sessionName} --hwmon-temp-abort=${config.ABORT_TEMPERATURE} -w ${config.ABORT_WAIT_TIME} --potfile-path "${potfilePath}" --outfile "${outputPath}" "${hccapxPath}" --rules-file="${rulePath}" "${wordlistPath}" "${maskPath}"`;
 		} else {
-			return `hashcat --hash-type=${config.HASH_TYPE} --attack-mode=0 --session ${sessionName} --hwmon-temp-abort=${config.ABORT_TEMPERATURE} -w ${config.ABORT_WAIT_TIME} --potfile-path "${potfilePath}" --outfile "${outputPath}" "${hccapxPath}" --rules-file="${rulePath}" "${wordlistPath}"`;
+			return `hashcat --hash-type=${config.HASH_TYPE} --attack-mode=9 --session ${sessionName} --hwmon-temp-abort=${config.ABORT_TEMPERATURE} -w ${config.ABORT_WAIT_TIME} --potfile-path "${potfilePath}" --outfile "${outputPath}" "${hccapxPath}" --rules-file="${rulePath}" "${wordlistPath}"`;
 		}
 	} else if (wordlist === "NONE" && rules !== "NONE") {
 		if (useMasks) {
-			return `hashcat --hash-type=${config.HASH_TYPE} --attack-mode=3 --session ${sessionName} --hwmon-temp-abort=${config.ABORT_TEMPERATURE} -w ${config.ABORT_WAIT_TIME} --potfile-path "${potfilePath}" --outfile "${outputPath}" "${hccapxPath}" --rules-file="${rulePath}" "${maskPath}"`;
+			return `hashcat --hash-type=${config.HASH_TYPE} --attack-mode=9 --session ${sessionName} --hwmon-temp-abort=${config.ABORT_TEMPERATURE} -w ${config.ABORT_WAIT_TIME} --potfile-path "${potfilePath}" --outfile "${outputPath}" "${hccapxPath}" --rules-file="${rulePath}" "${maskPath}"`;
 		} else {
 			return `hashcat --hash-type=${config.HASH_TYPE} --attack-mode=0 --session ${sessionName} --hwmon-temp-abort=${config.ABORT_TEMPERATURE} -w ${config.ABORT_WAIT_TIME} --potfile-path "${potfilePath}" --outfile "${outputPath}" "${hccapxPath}" --rules-file="${rulePath}"`;
 		}

@@ -16,10 +16,6 @@ module.exports = {
 		"./hashcat/wordlists"
 	],
 
-	DICTIONARIES: [
-		"./hashcat/dictionaries"
-	],
-
 	RULES: [
 		"./hashcat/rules/best64.rule"
 	],
