@@ -464,37 +464,57 @@ This script will generate a list of attacks based on the following combinations.
 ### Output Example
 ```javascript
 const attacks = [
-  [
-	"--attack-mode=0",
-	"./wordlists/known-passwords.txt",
-	"./hashcat/rules/wifi.rule"
-  ],
-  [
-	"--attack-mode=0",
-	"./wordlists/known-passwords.dic",
-	"./hashcat/rules/wifi.rule"
-  ],
-  [
-	"--attack-mode=0",
-	"",
-	"./hashcat/rules/wifi.rule"
-  ],
-  [
-	"--attack-mode=3",
-	"",
-	"?h?h?h?h?h?h?h?h"
-  ],
-  [
-	"--attack-mode=6",
-	"./wordlists/known-passwords.txt",
-	"?h?h?h?h?h?h?h?h"
-  ],
-  [
-	"--attack-mode=6",
-	"./wordlists/known-passwords.dic",
-	"?h?h?h?h?h?h?h?h"
-  ]
+	[
+		"--attack-mode=9",
+		"./hashcat/wordlists/[PASSWORDS_NAME].txt",
+		"./hashcat/rules/[RULES_NAME].rule",
+		"./hashcat/masks/[MASKS_NAME].hcmask"
+	],
+	[
+		"--attack-mode=9",
+		"./hashcat/wordlists/[PASSWORDS_NAME].txt",
+		"./hashcat/rules/[RULES_NAME].rule",
+		""
+	],
+	[
+		"--attack-mode=9",
+		"",
+		"./hashcat/rules/[RULES_NAME].rule",
+		"./hashcat/masks/[MASKS_NAME].hcmask"
+	],
+	[
+		"--attack-mode=6",
+		"./hashcat/wordlists/[PASSWORDS_NAME].txt",
+		"",
+		"./hashcat/masks/[MASKS_NAME].hcmask"
+	],
+	[
+		"--attack-mode=3",
+		"",
+		"",
+		"./hashcat/masks/[MASKS_NAME].hcmask"
+	],
+	[
+		"--attack-mode=0",
+		"",
+		"./hashcat/rules/[RULES_NAME].rule",
+		""
+	],
+	[
+		"--attack-mode=0",
+		"./hashcat/wordlists/[PASSWORDS_NAME].txt",
+		"",
+		""
+	],
+	[
+		"--attack-mode=0",
+		"",
+		"",
+		""
+	]
 ];
+
+module.exports = attacks;
 ```
 
 ## Generate the attack scripts.
@@ -512,8 +532,8 @@ To generate the necessary scripts to crack the WiFi handshakes based on the `./h
 * `--outfile "./hashcat/outputs/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-output.txt"` - The output of the command should be written to a file instead of being displayed on the terminal.
 * `"./handshakes/hccapx/[HC22000_FILE_NAME].hc22000"` - The targetted `.hc22000` file that needs to be cracked.
 * `--rules-file="./hashcat/rules/[RULES_NAME].rule"` - The file that contains the rules for generating password candidates.
-* `"./hashcat/wordlists/[PASSWORDS_LIST_NAME].txt"` - List of passwords.
-* `"./hashcat/masks/[MASKS_FILE_NAME].hcmask"` - A mask is a string of characters that represents the structure of a password. It uses placeholders to indicate which characters can be used at each position in the password. This allows hashcat to generate password candidates more efficiently than a brute-force attack, which would try every possible combination of characters.
+* `"./hashcat/wordlists/[PASSWORDS_NAME].txt"` - List of passwords.
+* `"./hashcat/masks/[MASKS_NAME].hcmask"` - A mask is a string of characters that represents the structure of a password. It uses placeholders to indicate which characters can be used at each position in the password. This allows hashcat to generate password candidates more efficiently than a brute-force attack, which would try every possible combination of characters.
 
 ### Attack Command Examples
 #### --attack-mode=0
@@ -525,19 +545,19 @@ hashcat --hash-type=22000 --attack-mode=0 --session [HC22000_FILE_NAME]_[RANDOM-
 #### --attack-mode=3
 A brute-force attack using a mask, which defines the character set and pattern for the password.
 ```bash
-hashcat --hash-type=22000 --attack-mode=3 --session [HC22000_FILE_NAME]_[RANDOM-NUMBER] --hwmon-temp-abort=100 -w 2 --potfile-path "./hashcat/potfiles/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-potfile.txt" --outfile="./hashcat/outputs/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-outfile.txt" "./handshakes/hccapx/[HC22000_FILE_NAME].hc22000" "./hashcat/masks/[MASKS_FILE_NAME].hcmask"
+hashcat --hash-type=22000 --attack-mode=3 --session [HC22000_FILE_NAME]_[RANDOM-NUMBER] --hwmon-temp-abort=100 -w 2 --potfile-path "./hashcat/potfiles/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-potfile.txt" --outfile="./hashcat/outputs/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-outfile.txt" "./handshakes/hccapx/[HC22000_FILE_NAME].hc22000" "./hashcat/masks/[MASKS_NAME].hcmask"
 ```
 
 #### --attack-mode=6
 A dictionary or wordlist attack with a mask attack.
 ```bash
-hashcat --hash-type=22000 --attack-mode=6 --session [HC22000_FILE_NAME]_[RANDOM-NUMBER] --hwmon-temp-abort=100 -w 2 --potfile-path "./hashcat/potfiles/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-potfile.txt" --outfile="./hashcat/outputs/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-outfile.txt" "./handshakes/hccapx/[HC22000_FILE_NAME].hc22000" "./hashcat/wordlists/[PASSWORDS_LIST_NAME].txt" "./hashcat/masks/[MASKS_FILE_NAME].hcmask"
+hashcat --hash-type=22000 --attack-mode=6 --session [HC22000_FILE_NAME]_[RANDOM-NUMBER] --hwmon-temp-abort=100 -w 2 --potfile-path "./hashcat/potfiles/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-potfile.txt" --outfile="./hashcat/outputs/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-outfile.txt" "./handshakes/hccapx/[HC22000_FILE_NAME].hc22000" "./hashcat/wordlists/[PASSWORDS_NAME].txt" "./hashcat/masks/[MASKS_NAME].hcmask"
 ```
 
 #### --attack-mode=9
 Similar to Mode 6 but with the order reversed. It combines a mask attack with a dictionary or wordlist attack.
 ```bash
-hashcat --hash-type=22000 --attack-mode=9 --session [HC22000_FILE_NAME]_[RANDOM-NUMBER] --hwmon-temp-abort=100 -w 2 --potfile-path "./hashcat/potfiles/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-potfile.txt" --outfile="./hashcat/outputs/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-outfile.txt" "./handshakes/hccapx/[HC22000_FILE_NAME].hc22000" --rules-file="./hashcat/rules/[RULES_NAME].rule" "./hashcat/wordlists/[PASSWORDS_LIST_NAME].txt" "./hashcat/masks/[MASKS_FILE_NAME].hcmask"
+hashcat --hash-type=22000 --attack-mode=9 --session [HC22000_FILE_NAME]_[RANDOM-NUMBER] --hwmon-temp-abort=100 -w 2 --potfile-path "./hashcat/potfiles/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-potfile.txt" --outfile="./hashcat/outputs/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-outfile.txt" "./handshakes/hccapx/[HC22000_FILE_NAME].hc22000" --rules-file="./hashcat/rules/[RULES_NAME].rule" "./hashcat/wordlists/[PASSWORDS_NAME].txt" "./hashcat/masks/[MASKS_NAME].hcmask"
 ```
 
 ## Execute the handshake attacks.

@@ -247,7 +247,7 @@ function generateCustomCommand(hccapx, wordlist, rules, useMasks, customMask) {
 			// --attack-mode=3 - .hc22000 X .hcmask
 			return `hashcat --hash-type=${config.HASH_TYPE} --attack-mode=3 --session ${sessionName} --hwmon-temp-abort=${config.ABORT_TEMPERATURE} -w ${config.ABORT_WAIT_TIME} --potfile-path "${potfilePath}" --outfile "${outputPath}" "${hccapxPath}" "${maskPath}"`
 		} else {
-			// --attack-mode=3 - .hc22000
+			// --attack-mode=0 - .hc22000
 			return `hashcat --hash-type=${config.HASH_TYPE} --attack-mode=0 --session ${sessionName} --hwmon-temp-abort=${config.ABORT_TEMPERATURE} -w ${config.ABORT_WAIT_TIME} --potfile-path "${potfilePath}" --outfile "${outputPath}" "${hccapxPath}"`
 		}
 	} else {
