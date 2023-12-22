@@ -441,16 +441,21 @@ To generate the necessary `.hc22000`/`.pmkid` files needed to crack the WiFi han
 ### Combinations
 This script will generate a list of attacks based on the following combinations.
 ```text
+--attack-mode=0
 .hc22000
 .hc22000 X .txt
 .hc22000 X .dic
 .hc22000 X .rule
 
+--attack-mode=3
 .hc22000 X .hcmask
-.hc22000 X .txt X .hcmask
-.hc22000 X .dic X .hcmask
-.hc22000 X .rule X .hcmask
 
+--attack-mode=6
+.hc22000 X .txt  X .hcmask
+.hc22000 X .dic  X .hcmask
+
+--attack-mode=9
+.hc22000 X .rule X .hcmask
 .hc22000 X .txt X .rule
 .hc22000 X .dic X .rule
 .hc22000 X .txt X .rule X .hcmask
