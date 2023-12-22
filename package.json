@@ -1,33 +1,29 @@
 {
-	"name": "pwnagotchi-tools",
+	"name": "Pwnscription",
 	"version": "1.0.0",
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"cli": "node ./cli/cli.mjs",
 		"get": "node ./pwnagetty/pwnagetty-get-pcaps.js",
 		"vagrant-up": "cd ./windows/vagrant && vagrant up --provision",
 		"vagrant-destroy": "cd ./windows/vagrant && vagrant destroy -f",
 		"generate": "node ./pwnagetty/pwnagetty-generate.js",
-		"attacks": "node ./scripts/generate-attacks-list.js",
-		"scripts": "npm run attacks && node ./scripts/generate-hashcat-scripts.js && chmod +x ./hashcat/attack-scripts/*",
-		"results": "node ./scripts/cracked-networks-results.js",
+		"cli": "node ./cli/cli.mjs",
 		"passwords": "node ./scripts/custom-wordlist-generator.js",
 		"combos": "node ./hashcat/generator/wordlist-combinations-generator.js",
-		"most": "npm run generate && npm run attacks && npm run scripts",
-		"all": "npm run get && npm run most"
+		"results": "node ./scripts/cracked-networks-results.js"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/ivy00johns/pwnagotchi-tools.git"
+		"url": "git+https://github.com/ivy00johns/pwnscription.git"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"bugs": {
-		"url": "https://github.com/ivy00johns/pwnagotchi-tools/issues"
+		"url": "https://github.com/ivy00johns/pwnscription/issues"
 	},
-	"homepage": "https://github.com/ivy00johns/pwnagotchi-tools#readme",
+	"homepage": "https://github.com/ivy00johns/pwnscription#readme",
 	"dependencies": {
 		"chalk": "^5.3.0",
 		"clear": "^0.1.0",

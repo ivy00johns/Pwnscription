@@ -47,7 +47,7 @@ async function detectCrackedNetworks() {
 // Main function
 async function main() {
 	await detectCrackedNetworks();
-	logos.printCrackedNetworks();
+	logos.printCrackedNetworks(networksCracked);
 }
 
 // Run the script
