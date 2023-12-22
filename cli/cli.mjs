@@ -95,7 +95,7 @@ async function run() {
 		type: "list",
 		name: "commandType",
 		message: "Select a command type:",
-		choices: ["Standard Command", "Custom Command", "Exit"]
+		choices: ["Standard Commands", "Custom Commands", "Exit"]
 	}]);
 
 	if (commandType === "Exit") {
@@ -132,7 +132,7 @@ async function run() {
 		}
 	}
 
-	if (commandType === "Custom Command") {
+	if (commandType === "Custom Commands") {
 		const exclusions    = [".gitkeep", ".gz"];
 		const hccapxFiles   = fs.readdirSync(config.LOCAL_HCCAPX_DIRECTORY).filter(file => exclusions.every(exclusion => !file.includes(exclusion)));
 		const wordlistFiles = fs.readdirSync(config.LOCAL_WORLISTS_DIRECTORY).filter(file => exclusions.every(exclusion => !file.includes(exclusion)));
