@@ -40,8 +40,7 @@ In order to create the project I started by combining and refactoring different 
 	* [Windows](#windows-dependencies)
 * [Pwnagotchi Setup](#pwnagotchi-setup)
 	* [Images/Config Files](#imagesconfig-files)
-	* [OS X](#os-x-setup)
-	* [Windows](#windows-setup)
+	* [Setup](#setup)
 * [Installation](#installation)
 	* [OS X](#os-x-installation)
 	* [Windows](#windows-installation)
@@ -74,7 +73,7 @@ In order to create the project I started by combining and refactoring different 
 	* [Cracked Network Results](#cracked-networks-results)
 * [Troubleshooting](#troubleshooting)
 * [Links](#links)
-* [To-DO](#to-do)
+* [To-Do](#to-do)
 
 # Dependencies
 ## OS X Dependencies
@@ -103,16 +102,9 @@ I've also included a `minimal-config.toml` file with the bare minimal configurat
 | [Torch](https://github.com/jayofelony/pwnagotchi-torch)    | [default.toml](https://github.com/jayofelony/pwnagotchi-torch/blob/pwnagotchi-torch/pwnagotchi/defaults.toml) | `./pwnagotchi/defaults-torch.toml`        |
 | [Aluminum-Ice](https://github.com/aluminum-ice/pwnagotchi) | [default.toml](https://github.com/aluminum-ice/pwnagotchi/blob/master/pwnagotchi/defaults.toml)    			 | `./pwnagotchi/defaults-aluminum-ice.toml` |
 
-## OS X Setup
+## Setup
 * Official
 	* [Connecting to your Pwnagotchi: pwnagotchi.ai](https://pwnagotchi.ai/configuration/#connect-to-your-pwnagotchi)
-* Other
-	* https://mattgibson.ca/pwnagotchi-1-6-2-with-waveshare-v3-macos-macbook-host/
-	* https://cyberarms.wordpress.com/2019/12/13/pwnagotchi-on-a-pi-4-using-any-display/
-
-## Windows Setup
-* Other
-	* https://blog.manchestergreyhats.co.uk/posts/2020-01-10-pwnagotchi-setup/
 
 # Installation
 ## OS X Installation
@@ -604,23 +596,31 @@ Stopped: Sun Nov 12 20:02:49 2023
 ----
 
 # Links
+## Pwnagotchi
 * [pwnagotchi.ai](https://pwnagotchi.ai/)
-* Main Pwnagotchi repo: [Pwnagotchi](https://github.com/evilsocket/pwnagotchi)
-	* Default Pwnagotchi configuration file: [defaults.toml](https://github.com/evilsocket/pwnagotchi/blob/master/pwnagotchi/defaults.toml)
 * [Pwnagotchi setup on Mac OS](https://mattgibson.ca/pwnagotchi-1-6-2-with-waveshare-v3-macos-macbook-host/)
+* https://mattgibson.ca/pwnagotchi-1-6-2-with-waveshare-v3-macos-macbook-host/
+* https://cyberarms.wordpress.com/2019/12/13/pwnagotchi-on-a-pi-4-using-any-display/
+* https://blog.manchestergreyhats.co.uk/posts/2020-01-10-pwnagotchi-setup/
+
+## Hashcat
+* https://hashcat.net/wiki/
 * https://cryptokait.com/2020/02/24/password-cracking-with-hashcat/
 * https://zzzteph.github.io/weakpass/
 * https://patorjk.com/software/taag/#p=display&f=Graffiti&t=Type%20Something%20
 * https://github.com/SBoudrias/Inquirer.js/tree/master
 
-* Wordlists
-	* [Weakpass](https://weakpass.com/wordlist)
-	* https://notsosecure.com/one-rule-to-rule-them-all
+## Wordlists
+* [Weakpass](https://weakpass.com/wordlist)
+* https://notsosecure.com/one-rule-to-rule-them-all
 
-* Rules
-	* https://github.com/samirettali/password-cracking-rules
-	* [KoreLogic's](https://contest-2010.korelogic.com/rules-hashcat.html)
-	* https://hashcat.net/wiki/doku.php?id=rule_based_attack
+## Rules
+* https://github.com/samirettali/password-cracking-rules
+* [KoreLogic's](https://contest-2010.korelogic.com/rules-hashcat.html)
+* https://hashcat.net/wiki/doku.php?id=rule_based_attack
+
+## Masks
+* 
 
 ----
 
@@ -631,3 +631,4 @@ Stopped: Sun Nov 12 20:02:49 2023
 	No PMKID or HCCAPX found.
 	```
 - [ ] Find better names for the functions and commands.
+- [ ] Add custom attack options.
