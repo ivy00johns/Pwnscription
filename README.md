@@ -454,9 +454,9 @@ This script will generate a list of attacks based on the following combinations.
 .dic X .hcmask
 
 --attack-mode=9
-.rule X .hcmask
 .txt  X .rule
 .dic  X .rule
+.rule X .hcmask
 .txt  X .rule X .hcmask
 .dic  X .rule X .hcmask
 ```
