@@ -459,25 +459,25 @@ Are you looking to build and execute `hashcat` commands quickly based on the fil
 * `"./hashcat/masks/[MASKS_NAME].hcmask"` - A mask is a string of characters that represents the structure of a password. It uses placeholders to indicate which characters can be used at each position in the password. This allows hashcat to generate password candidates more efficiently than a brute-force attack, which would try every possible combination of characters.
 
 ### Attack Command Examples
-#### --attack-mode=0
+#### [--attack-mode=0](https://hashcat.net/wiki/doku.php?id=dictionary_attack)
 A straightforward dictionary or wordlist attack without any mutations or alterations.
 ```bash
 hashcat --hash-type=22000 --attack-mode=0 --session [HC22000_FILE_NAME]_[RANDOM-NUMBER] --hwmon-temp-abort=100 -w 2 --potfile-path "./hashcat/potfiles/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-potfile.txt" --outfile="./hashcat/outputs/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-outfile.txt" "./handshakes/hccapx/[HC22000_FILE_NAME].hc22000"
 ```
 
-#### --attack-mode=3
+#### [--attack-mode=3](https://hashcat.net/wiki/doku.php?id=mask_attack)
 A brute-force attack using a mask, which defines the character set and pattern for the password.
 ```bash
 hashcat --hash-type=22000 --attack-mode=3 --session [HC22000_FILE_NAME]_[RANDOM-NUMBER] --hwmon-temp-abort=100 -w 2 --potfile-path "./hashcat/potfiles/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-potfile.txt" --outfile="./hashcat/outputs/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-outfile.txt" "./handshakes/hccapx/[HC22000_FILE_NAME].hc22000" "./hashcat/masks/[MASKS_NAME].hcmask"
 ```
 
-#### --attack-mode=6
+#### [--attack-mode=6](https://hashcat.net/wiki/doku.php?id=hybrid_attack)
 A dictionary or wordlist attack with a mask attack.
 ```bash
 hashcat --hash-type=22000 --attack-mode=6 --session [HC22000_FILE_NAME]_[RANDOM-NUMBER] --hwmon-temp-abort=100 -w 2 --potfile-path "./hashcat/potfiles/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-potfile.txt" --outfile="./hashcat/outputs/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-outfile.txt" "./handshakes/hccapx/[HC22000_FILE_NAME].hc22000" "./hashcat/wordlists/[PASSWORDS_NAME].txt" "./hashcat/masks/[MASKS_NAME].hcmask"
 ```
 
-#### --attack-mode=9
+#### [--attack-mode=9](https://hashcat.net/wiki/doku.php?id=association_attack)
 Similar to Mode 6 but with the order reversed. It combines a mask attack with a dictionary or wordlist attack.
 ```bash
 hashcat --hash-type=22000 --attack-mode=9 --session [HC22000_FILE_NAME]_[RANDOM-NUMBER] --hwmon-temp-abort=100 -w 2 --potfile-path "./hashcat/potfiles/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-potfile.txt" --outfile="./hashcat/outputs/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-outfile.txt" "./handshakes/hccapx/[HC22000_FILE_NAME].hc22000" --rules-file="./hashcat/rules/[RULES_NAME].rule" "./hashcat/wordlists/[PASSWORDS_NAME].txt" "./hashcat/masks/[MASKS_NAME].hcmask"
