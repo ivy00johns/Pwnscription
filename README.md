@@ -450,15 +450,15 @@ This script will generate a list of attacks based on the following combinations.
 .hcmask
 
 --attack-mode=6
-.txt  X .hcmask
-.dic  X .hcmask
+.txt X .hcmask
+.dic X .hcmask
 
 --attack-mode=9
 .rule X .hcmask
-.txt X .rule
-.dic X .rule
-.txt X .rule X .hcmask
-.dic X .rule X .hcmask
+.txt  X .rule
+.dic  X .rule
+.txt  X .rule X .hcmask
+.dic  X .rule X .hcmask
 ```
 
 ### Output Example
