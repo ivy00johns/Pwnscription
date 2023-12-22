@@ -16,16 +16,12 @@ module.exports = {
 		"./hashcat/wordlists"
 	],
 
-	DICTIONARIES: [
-		"./hashcat/dictionaries"
-	],
-
 	RULES: [
 		"./hashcat/rules/best64.rule"
 	],
 
 	MASKS: [
-		"?h?h?h?h?h?h?h?h"
+		"./hashcat/masks"
 	],
 
 	// File paths
