@@ -15,7 +15,7 @@
 ----
 
 # Purpose
-I created this project to make the process of cracking Wi-Fi handshakes gathered by a `Pwnagotchi` using the `Hashcat` tooling, on both OS X and Windows, easier by generating the necessary terminal commands for you.
+I created this project to make the process of cracking Wi-Fi handshakes gathered by a `Pwnagotchi` using the `Hashcat` tooling, on both OS X and Windows, easier by generating the necessary terminal commands for you. I developed a CLI (`npm run cli`) utility that allows you to quickly build and execute `hashcat` commands from the terminal.
 
 ![Pwnagotchi Logo](./images/pwnagotchi.gif)
 
@@ -138,6 +138,10 @@ I've also included a `minimal-config.toml` file with the bare minimal configurat
 		PASSWORD: "", // Pwnagotchi SSH password
 		PORT: 22 // Pwnagotchi SSH port
 	},
+
+	// Windows configuration
+	WINDOWS: false, // Flag to indicate if running on Windows
+	HASHCAT_PATH: "", // Path to Hashcat file on Windows
 	...
 	```
 
@@ -161,7 +165,7 @@ I've also included a `minimal-config.toml` file with the bare minimal configurat
 	```
 
 # Additional Configuration Steps
-\]## Wordlists
+## Wordlists
 By default this repo contains a single popular large wordlist, `./hashcat/wordlists/rockyou.txt.gz` (`~54 MB`), that you will need to unzip (`~140 MB`). You will want to download additional ones to work with as well. You can place any new wordlists in the provided `./hashcat/wordlists` directory, or reference the directory path in the `.config.js` file.
 ```javascript
 ...
