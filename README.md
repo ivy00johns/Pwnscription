@@ -88,6 +88,9 @@ In order to create the project I started by combining and refactoring different 
 * [Vagrant](https://developer.hashicorp.com/vagrant/install)
 * [Virtual Box](https://www.virtualbox.org/wiki/Downloads)
 	* Vagrant and Virtual Box are only used to convert `.pcap` files to the corresponding `.hccapx`/`.pmkid` files.
+* [Hashcat v6.2.6 binaries](https://hashcat.net/hashcat/)
+	* Make note of the `PATH` to where you unpacked `Hashcat`.
+		* Example: `C:\\[PATH]\\hashcat-6.2.6`
 
 # Pwnagotchi Setup
 ## Images/Config Files
