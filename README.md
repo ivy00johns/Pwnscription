@@ -29,12 +29,10 @@ In order to create the project I started by combining and refactoring different 
 	* `npm run vagrant-up`: Windows - Download the `.pcap` files from your `Pwnagotchi`.
 	* `npm run vagrant-destroy`: Windows - Delete the Vagrant image when you are done.
 * `npm run generate`: Generate the `.hc22000` and `.pmkid` files for `hashcat` to crack based on the `.pcap` files you download.
-* `npm run attacks`: Generate a list of attacks based on the variables listed in the `config.js` file.
-* `npm run scripts`: Generate a list of attack scripts based on the `attacks-list.js` file.
-* `npm run results`: Displays a list of cracked networks in the terminal.
+* `npm run cli`: Run the availabe `npm run` commands as well as building `hashcat` scripts quickly.
 * `npm run passwords`: Generate a custom wordlist containing all combinations of the `WORD_LIST` in the `config.js` file.
 * `npm run combos`: Generate the results of what happens when a `.rule` file is applied to a wordlist file for a better understanding of what `.rule` files do in `hashcat`.
-* `npm run cli`: Run the availabe `npm run` commands as well as building `hashcat` scripts quickly.
+* `npm run results`: Displays a list of cracked networks in the terminal.
 
 # Table Of Contents
 * [Dependencies](#dependencies)
@@ -48,8 +46,6 @@ In order to create the project I started by combining and refactoring different 
 	* [OS X](#os-x-installation)
 	* [Windows](#windows-installation)
 * [Initial Configuration](#initial-configuration)
-	* [OS X](#os-x-configuration)
-	* [Windows](#windows-configuration)
 * [Additional Configuration Steps](#additional-configuration-steps)
 	* [Wordlists](#wordlists)
 		* [Known Password Wordlist](#known-password-wordlist)
@@ -70,24 +66,13 @@ In order to create the project I started by combining and refactoring different 
 	* [Generate the .HC22000/.PMKID files.](#generate-the-hc22000pmkid-files)
 		* [OS X](#os-x---generate)
 		* [Windows](#windows---generate)
-	* [Generate the list of attacks.](#generate-the-list-of-attacks)
-		* [Combinations](#combinations)
-		* [Output Example](#output-example)
-	* [Generate the attack scripts.](#generate-the-attack-scripts)
-		* [Command Breakdown](#command-breakdown)
-		* [Attack Command Examples](#attack-command-examples)
-			* [--attack-mode=0](#attack-mode0)
-			* [--attack-mode=3](#attack-mode3)
-			* [--attack-mode=6](#attack-mode6)
-			* [--attack-mode=9](#attack-mode9)
-	* [Execute the handshake attacks.](#execute-the-handshake-attacks)
-		* [Example Terminal Output](#example-terminal-output)
-	* [Results](#cracked-networks-results)
-	* [Password Generator](#custom-wordlists)
-	* [.rule Results](#rule-combinations-generation)
 	* [CLI](#cli)
+	* [Password Generator](#custom-wordlists)
+	* [(.rule * .txt) Results](#rule-combinations-generation)
+	* [Cracked Network Results](#cracked-networks-results)
 * [Troubleshooting](#troubleshooting)
 * [Links](#links)
+* [To-DO](#to-do)
 
 # Dependencies
 ## OS X Dependencies
@@ -101,9 +86,6 @@ In order to create the project I started by combining and refactoring different 
 * [Vagrant](https://developer.hashicorp.com/vagrant/install)
 * [Virtual Box](https://www.virtualbox.org/wiki/Downloads)
 	* Vagrant and Virtual Box are only used to convert `.pcap` files to the corresponding `.hccapx`/`.pmkid` files.
-* [Hashcat v6.2.6 binaries](https://hashcat.net/hashcat/)
-	* Make note of the `PATH` to where you unpacked `Hashcat`.
-		* Example: `C:\\Users\\XXXXXX\\hashcat-6.2.6\\`
 
 # Pwnagotchi Setup
 ## Images/Config Files
@@ -139,7 +121,6 @@ I've also included a `minimal-config.toml` file with the bare minimal configurat
 * `npm install`
 
 # Initial Configuration
-## OS X Configuration
 1. `cp .config.example .config`
 2. Set the details for your `Pwnagotchi`:
 	```javascript
@@ -154,26 +135,8 @@ I've also included a `minimal-config.toml` file with the bare minimal configurat
 	...
 	```
 
-## Windows Configuration
-1. `cp .config.example .config`
-2. Set the details for your `Pwnagotchi`:
-	```javascript
-	...
-	// Pwnagotchi SSH configuration
-	PWNAGOTCHI_SSH: {
-		HOST_ADDRESS: "", // Pwnagotchi SSH host address
-		USERNAME: "", // Pwnagotchi SSH username
-		PASSWORD: "", // Pwnagotchi SSH password
-		PORT: 22 // Pwnagotchi SSH port
-	},
-
-	// Windows configuration
-	WINDOWS: true, // Flag to indicate if running on Windows
-	HASHCAT_PATH: "C:\\[PATH]\\hashcat-6.2.6", // Path to Hashcat on Windows
-	...
-	```
 # Additional Configuration Steps
-## Wordlists
+\]## Wordlists
 By default this repo contains a single popular large wordlist, `./hashcat/wordlists/rockyou.txt.gz` (`~54 MB`), that you will need to unzip (`~140 MB`). You will want to download additional ones to work with as well. You can place any new wordlists in the provided `./hashcat/wordlists` directory, or reference the directory path in the `.config.js` file.
 ```javascript
 ...
@@ -433,93 +396,25 @@ To generate the necessary `.hc22000`/`.pmkid` files needed to crack the WiFi han
 	No PMKID or HCCAPX found.
 	```
 
-## Generate the list of attacks.
-* To generate the list of attack combinations based on the variables outlined in the `.config` file, run the following script. It will generate the `attacks-list.js` file in the `./hashcat/attacks-list` directory.
-	* `npm run attacks`
-		* **When ever you modify the `WORDLISTS`, `RULES`, and/or `MASKS` variables in the `.config` file, make sure to rerun this script before running the `npm run scripts` command.**
+## CLI
+Are you looking to build and execute `hashcat` commands quickly based on the files you've already generated? Well you are in luck, I have added `cli` tooling to do just that. 
 
-### Combinations
-This script will generate a list of attacks based on the following combinations.
-```text
---attack-mode=0
-.txt
-.dic
-.rule
-
---attack-mode=3
-.hcmask
-
---attack-mode=6
-.txt X .hcmask
-.dic X .hcmask
-
---attack-mode=9
-.txt  X .rule
-.dic  X .rule
-.rule X .hcmask
-.txt  X .rule X .hcmask
-.dic  X .rule X .hcmask
-```
-
-### Output Example
-```javascript
-const attacks = [
-	[
-		"--attack-mode=9",
-		"./hashcat/wordlists/[PASSWORDS_NAME].txt",
-		"./hashcat/rules/[RULES_NAME].rule",
-		"./hashcat/masks/[MASKS_NAME].hcmask"
-	],
-	[
-		"--attack-mode=9",
-		"./hashcat/wordlists/[PASSWORDS_NAME].txt",
-		"./hashcat/rules/[RULES_NAME].rule",
-		""
-	],
-	[
-		"--attack-mode=9",
-		"",
-		"./hashcat/rules/[RULES_NAME].rule",
-		"./hashcat/masks/[MASKS_NAME].hcmask"
-	],
-	[
-		"--attack-mode=6",
-		"./hashcat/wordlists/[PASSWORDS_NAME].txt",
-		"",
-		"./hashcat/masks/[MASKS_NAME].hcmask"
-	],
-	[
-		"--attack-mode=3",
-		"",
-		"",
-		"./hashcat/masks/[MASKS_NAME].hcmask"
-	],
-	[
-		"--attack-mode=0",
-		"",
-		"./hashcat/rules/[RULES_NAME].rule",
-		""
-	],
-	[
-		"--attack-mode=0",
-		"./hashcat/wordlists/[PASSWORDS_NAME].txt",
-		"",
-		""
-	],
-	[
-		"--attack-mode=0",
-		"",
-		"",
-		""
-	]
-];
-
-module.exports = attacks;
-```
-
-## Generate the attack scripts.
-To generate the necessary scripts to crack the WiFi handshakes based on the `./hashcat/attacks-list/attacks-list.js` file, run the following script.
-* `npm run scripts`
+1. Run `npm run cli` to get started.
+![](./images/cli-1.png)
+2. If you select `Standard Commands` you can execute one of the `npm run` commands listed in the `package.json` file.
+	1. Then select the command that you would like to execute.
+	* ![](./images/cli-2.png)
+3. If you select `Custom Command` you can build a custom command based on existing files.
+	1. Select a `.hc22000` file that you would like to crack.
+	* ![](./images/cli-3.png)
+	2. Select a wordlist you'd like to use, you can also select "`NONE`" as an option.
+	*![](./images/cli-4.png)
+	3. Select a rule you'd like to use, you can also select "`NONE`" as an option.
+	* ![](./images/cli-5.png)
+4. Then you  can choose to either `Execute` the command or `Copy to Clipboard`.
+* ![](./images/cli-6.png)
+* ![](./images/cli-7.png)
+* ![](./images/cli-8.png)
 
 ### Command Breakdown
 * `hashcat` - "Hashcat is the world’s fastest CPU-based password recovery tool."
@@ -559,17 +454,6 @@ Similar to Mode 6 but with the order reversed. It combines a mask attack with a 
 ```bash
 hashcat --hash-type=22000 --attack-mode=9 --session [HC22000_FILE_NAME]_[RANDOM-NUMBER] --hwmon-temp-abort=100 -w 2 --potfile-path "./hashcat/potfiles/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-potfile.txt" --outfile="./hashcat/outputs/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-outfile.txt" "./handshakes/hccapx/[HC22000_FILE_NAME].hc22000" --rules-file="./hashcat/rules/[RULES_NAME].rule" "./hashcat/wordlists/[PASSWORDS_NAME].txt" "./hashcat/masks/[MASKS_NAME].hcmask"
 ```
-
-## Execute the handshake attacks.
-### OS X Execution
-* Locate the necessary `.sh` file in the `./hashcat/attack-scripts` directory.
-* Run the script:
-	* `./hashcat/attack-scripts/NETWORK_a0648f5681d7.sh`
-
-### Windows Execution
-* Locate the necessary `.bat` file in the `.\hashcat\attack-scripts` directory.
-* Run the script:
-	* `.\hashcat\attack-scripts\NETWORK_a0648f5681d7.bat`
 
 ### Example Terminal Output
 ```bash
@@ -683,26 +567,6 @@ Stopped: Sun Nov 12 20:02:49 2023
 ╚══════════════╧══════════╧═══════════════════════════╝
 ```
 
-## CLI
-Are you looking to build and execute `hashcat` commands quickly based on the files you've already generated? Well you are in luck, I have added `cli` tooling to do just that. 
-
-1. Run `npm run cli` to get started.
-![](./images/cli-1.png)
-2. If you select `Standard Commands` you can execute one of the `npm run` commands listed in the `package.json` file.
-	1. Then select the command that you would like to execute.
-	* ![](./images/cli-2.png)
-3. If you select `Custom Command` you can build a custom command based on existing files.
-	1. Select a `.hc22000` file that you would like to crack.
-	* ![](./images/cli-3.png)
-	2. Select a wordlist you'd like to use, you can also select "`NONE`" as an option.
-	*![](./images/cli-4.png)
-	3. Select a rule you'd like to use, you can also select "`NONE`" as an option.
-	* ![](./images/cli-5.png)
-4. Then you  can choose to either `Execute` the command or `Copy to Clipboard`.
-* ![](./images/cli-6.png)
-* ![](./images/cli-7.png)
-* ![](./images/cli-8.png)
-
 ----
 
 # Troubleshooting
@@ -737,5 +601,4 @@ Are you looking to build and execute `hashcat` commands quickly based on the fil
 	Processing: EXAMPLE_c8d71922525c.pcap
 	No PMKID or HCCAPX found.
 	```
-- [ ] Make it so you can generate list for each `.rule` file in the directory, if one is listed.
 - [ ] Find better names for the functions and commands.
