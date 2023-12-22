@@ -79,11 +79,12 @@ In order to create the project I started by combining and refactoring different 
 			* [--attack-mode=0](#attack-mode0)
 			* [--attack-mode=3](#attack-mode3)
 			* [--attack-mode=6](#attack-mode6)
+			* [--attack-mode=9](#attack-mode9)
 	* [Execute the handshake attacks.](#execute-the-handshake-attacks)
 		* [Example Terminal Output](#example-terminal-output)
 	* [Results](#cracked-networks-results)
-	* [Password Generator]()
-	* [.rule Results]()
+	* [Password Generator](#custom-wordlists)
+	* [.rule Results](#rule-combinations-generation)
 	* [CLI](#cli)
 * [Troubleshooting](#troubleshooting)
 * [Links](#links)
@@ -200,7 +201,7 @@ WORDLISTS: [
 ### Known Password Wordlist
 * You can add your own known or suspected passwords by cloning the example wordlist and/or dictionary file and editing it.
 	1. `cp ./hashcat/known-passwords.example.txt ./hashcat/wordlists/known-passwords.txt`
-	2. `cp ./hashcat/known-passwords.example.dic ./hashcat/dictionaries/known-passwords.dic`
+	2. `cp ./hashcat/known-passwords.example.dic ./hashcat/wordlists/known-passwords.dic`
 
 ### Custom Wordlists
 You can generate a list of possible passwords based on a couple of clues that could have be used to build the password you want to crack.
@@ -435,25 +436,25 @@ To generate the necessary `.hc22000`/`.pmkid` files needed to crack the WiFi han
 ## Generate the list of attacks.
 * To generate the list of attack combinations based on the variables outlined in the `.config` file, run the following script. It will generate the `attacks-list.js` file in the `./hashcat/attacks-list` directory.
 	* `npm run attacks`
-		* **When ever you modify the `WORDLISTS`, `DICTIONARIES`, `RULES`, and/or `MASKS` variables in the `.config` file, make sure to rerun this script before running the `npm run scripts` command.**
+		* **When ever you modify the `WORDLISTS`, `RULES`, and/or `MASKS` variables in the `.config` file, make sure to rerun this script before running the `npm run scripts` command.**
 
 ### Combinations
 This script will generate a list of attacks based on the following combinations.
 ```text
---attack-mode=0
-.txt X .rule
-.dic X .rule
-.rule x mask
-.rule
-.txt
-.dic
+.hc22000
+.hc22000 X .txt
+.hc22000 X .dic
+.hc22000 X .rule
 
---attack-mode=3
-mask
+.hc22000 X .hcmask
+.hc22000 X .txt X .hcmask
+.hc22000 X .dic X .hcmask
+.hc22000 X .rule X .hcmask
 
---attack-mode=6
-.txt X mask
-.dic X mask
+.hc22000 X .txt X .rule
+.hc22000 X .dic X .rule
+.hc22000 X .txt X .rule X .hcmask
+.hc22000 X .dic X .rule X .hcmask
 ```
 
 ### Output Example
@@ -504,26 +505,35 @@ To generate the necessary scripts to crack the WiFi handshakes based on the `./h
 * `--hwmon-temp-abort=100` - Abort temperture: `100 C`
 	* `-w 2` - Wait for 2 seconds after reaching the abort temperature before shutting down.
 * `--potfile-path="./hashcat/potfiles/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-potfile.txt"` - The potfile is a file that stores the hashes that have been cracked by hashcat. This allows hashcat to resume cracking a hash from where it left off if the process is interrupted
-* `--outfile="./hashcat/outputs/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-output.txt"` - The output of the command should be written to a file instead of being displayed on the terminal.
+* `--outfile "./hashcat/outputs/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-output.txt"` - The output of the command should be written to a file instead of being displayed on the terminal.
 * `"./handshakes/hccapx/[HC22000_FILE_NAME].hc22000"` - The targetted `.hc22000` file that needs to be cracked.
 * `--rules-file="./hashcat/rules/[RULES_NAME].rule"` - The file that contains the rules for generating password candidates.
-* `"./wordlists/[PASSWORDS_LIST_NAME].txt"` - List of passwords.
-* `"?h?h?h?h?h?h?h?h"` - A mask is a string of characters that represents the structure of a password. It uses placeholders to indicate which characters can be used at each position in the password. This allows hashcat to generate password candidates more efficiently than a brute-force attack, which would try every possible combination of characters.
+* `"./hashcat/wordlists/[PASSWORDS_LIST_NAME].txt"` - List of passwords.
+* `"./hashcat/masks/[MASKS_FILE_NAME].hcmask"` - A mask is a string of characters that represents the structure of a password. It uses placeholders to indicate which characters can be used at each position in the password. This allows hashcat to generate password candidates more efficiently than a brute-force attack, which would try every possible combination of characters.
 
 ### Attack Command Examples
 #### --attack-mode=0
+A straightforward dictionary or wordlist attack without any mutations or alterations.
 ```bash
-hashcat --hash-type=22000 --attack-mode=0 --session [HC22000_FILE_NAME]_[RANDOM-NUMBER] --hwmon-temp-abort=100 -w 2 --potfile-path "./hashcat/potfiles/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-potfile.txt" --outfile="./hashcat/outputs/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-outfile.txt" "handshakes/hccapx/[HC22000_FILE_NAME].hc22000" --rules-file="./hashcat/rules/[RULES_NAME].rule" -S "wordlists/[PASSWORDS_LIST_NAME].txt"
+hashcat --hash-type=22000 --attack-mode=0 --session [HC22000_FILE_NAME]_[RANDOM-NUMBER] --hwmon-temp-abort=100 -w 2 --potfile-path "./hashcat/potfiles/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-potfile.txt" --outfile="./hashcat/outputs/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-outfile.txt" "./handshakes/hccapx/[HC22000_FILE_NAME].hc22000"
 ```
 
 #### --attack-mode=3
+A brute-force attack using a mask, which defines the character set and pattern for the password.
 ```bash
-hashcat --hash-type=22000 --attack-mode=3 --session [HC22000_FILE_NAME]_[RANDOM-NUMBER] --hwmon-temp-abort=100 -w 2 --potfile-path "./hashcat/potfiles/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-potfile.txt" --outfile="./hashcat/outputs/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-outfile.txt" "handshakes/hccapx/[HC22000_FILE_NAME].hc22000" "[MASK]"
+hashcat --hash-type=22000 --attack-mode=3 --session [HC22000_FILE_NAME]_[RANDOM-NUMBER] --hwmon-temp-abort=100 -w 2 --potfile-path "./hashcat/potfiles/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-potfile.txt" --outfile="./hashcat/outputs/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-outfile.txt" "./handshakes/hccapx/[HC22000_FILE_NAME].hc22000" "./hashcat/masks/[MASKS_FILE_NAME].hcmask"
 ```
 
 #### --attack-mode=6
+A dictionary or wordlist attack with a mask attack.
 ```bash
-hashcat --hash-type=22000 --attack-mode=6 --session [HC22000_FILE_NAME]_[RANDOM-NUMBER] --hwmon-temp-abort=100 -w 2 --potfile-path "./hashcat/potfiles/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-potfile.txt" --outfile="./hashcat/outputs/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-outfile.txt" "handshakes/hccapx/[HC22000_FILE_NAME].hc22000" "wordlists/[PASSWORDS_LIST_NAME].txt" "[MASK]"
+hashcat --hash-type=22000 --attack-mode=6 --session [HC22000_FILE_NAME]_[RANDOM-NUMBER] --hwmon-temp-abort=100 -w 2 --potfile-path "./hashcat/potfiles/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-potfile.txt" --outfile="./hashcat/outputs/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-outfile.txt" "./handshakes/hccapx/[HC22000_FILE_NAME].hc22000" "./hashcat/wordlists/[PASSWORDS_LIST_NAME].txt" "./hashcat/masks/[MASKS_FILE_NAME].hcmask"
+```
+
+#### --attack-mode=9
+Similar to Mode 6 but with the order reversed. It combines a mask attack with a dictionary or wordlist attack.
+```bash
+hashcat --hash-type=22000 --attack-mode=9 --session [HC22000_FILE_NAME]_[RANDOM-NUMBER] --hwmon-temp-abort=100 -w 2 --potfile-path "./hashcat/potfiles/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-potfile.txt" --outfile="./hashcat/outputs/[HC22000_FILE_NAME]_[RANDOM-NUMBER]-outfile.txt" "./handshakes/hccapx/[HC22000_FILE_NAME].hc22000" --rules-file="./hashcat/rules/[RULES_NAME].rule" "./hashcat/wordlists/[PASSWORDS_LIST_NAME].txt" "./hashcat/masks/[MASKS_FILE_NAME].hcmask"
 ```
 
 ## Execute the handshake attacks.
@@ -705,6 +715,3 @@ Are you looking to build and execute `hashcat` commands quickly based on the fil
 	```
 - [ ] Make it so you can generate list for each `.rule` file in the directory, if one is listed.
 - [ ] Find better names for the functions and commands.
-- [ ] Move logos to there own file.
-- [ ] Update README examples for geenrated commands.
-- [ ] Add .dic support.
