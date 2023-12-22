@@ -229,11 +229,11 @@ async function generateCustomCommand(hccapx, wordlist, rules, useMasks, customMa
 
 		const choicesArray = choiceValues.map(element => ({
 			value: element,
-			name: attackModeNames[element],
+			name: element === defaultValue ? `${attackModeNames[element]} [DEFAULT]` : attackModeNames[element]
 		}));
 
 		return await inquirer.prompt([{
-			type: "list",
+			type: "rawlist",
 			name: "attackMode",
 			message: "Choose an attack mode:",
 			choices: choicesArray,
