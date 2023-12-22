@@ -140,7 +140,7 @@ async function run() {
 		const masksFiles    = fs.readdirSync(config.LOCAL_MASKS_DIRECTORY).filter(file => exclusions.every(exclusion => !file.includes(exclusion)));
 
 		if (hccapxFiles.length === 0) {
-			console.log(chalk.yellow("No hccapx .hc22000 files found. Please run 'npm run generate'."));
+			console.log(chalk.yellow(`No hccapx .hc22000 files found. Please run "npm run generate".`));
 			process.exit(0);
 		}
 

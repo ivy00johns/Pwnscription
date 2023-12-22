@@ -1,3 +1,5 @@
+const { table } = require("table");
+
 function printPwnscription() {
 	console.log(`
 ██████╗ ██╗    ██╗███╗   ██╗███████╗ ██████╗██████╗ ██╗██████╗ ████████╗██╗ ██████╗ ███╗   ██╗
@@ -38,7 +40,12 @@ function printCrackedNetworks(networksCracked) {
 ▐███▌▐█•█▌▐█ ▪▐▌▐███▌▐█.█▌▐█▄▄▌██. ██   ██▐█▌▐█▄▄▌ ▐█▌·▐█▌██▐█▌▐█▌.▐▌▐█•█▌▐█.█▌▐█▄▪▐█
 ·▀▀▀ .▀  ▀ ▀  ▀ ·▀▀▀ ·▀  ▀ ▀▀▀ ▀▀▀▀▀•   ▀▀ █▪ ▀▀▀  ▀▀▀  ▀▀▀▀ ▀▪ ▀█▄▀▪.▀  ▀·▀  ▀ ▀▀▀▀ 
 	`);
-	console.log(table(networksCracked));
+
+	if (networksCracked.length === 0) {
+		console.log(`No cracked networks.`);
+	} else {
+		console.log(table(networksCracked));
+	}
 }
 
 module.exports = {
