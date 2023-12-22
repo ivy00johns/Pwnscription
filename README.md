@@ -46,6 +46,8 @@ In order to create the project I started by combining and refactoring different 
 	* [OS X](#os-x-installation)
 	* [Windows](#windows-installation)
 * [Initial Configuration](#initial-configuration)
+	* [OS X](#os-x-configuration)
+	* [Windows](#windows-configuration)
 * [Additional Configuration Steps](#additional-configuration-steps)
 	* [Wordlists](#wordlists)
 		* [Known Password Wordlist](#known-password-wordlist)
@@ -121,6 +123,7 @@ I've also included a `minimal-config.toml` file with the bare minimal configurat
 * `npm install`
 
 # Initial Configuration
+## OS X Configuration
 1. `cp .config.example .config`
 2. Set the details for your `Pwnagotchi`:
 	```javascript
@@ -132,6 +135,25 @@ I've also included a `minimal-config.toml` file with the bare minimal configurat
 		PASSWORD: "", // Pwnagotchi SSH password
 		PORT: 22 // Pwnagotchi SSH port
 	},
+	...
+	```
+
+## Windows Configuration
+1. `cp .config.example .config`
+2. Set the details for your `Pwnagotchi`:
+	```javascript
+	...
+	// Pwnagotchi SSH configuration
+	PWNAGOTCHI_SSH: {
+		HOST_ADDRESS: "", // Pwnagotchi SSH host address
+		USERNAME: "", // Pwnagotchi SSH username
+		PASSWORD: "", // Pwnagotchi SSH password
+		PORT: 22 // Pwnagotchi SSH port
+	},
+
+	// Windows configuration
+	WINDOWS: true, // Flag to indicate if running on Windows
+	HASHCAT_PATH: "C:\\[PATH]\\hashcat-6.2.6", // Path to Hashcat file on Windows
 	...
 	```
 

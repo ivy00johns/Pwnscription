@@ -7,6 +7,10 @@ module.exports = {
 		PORT: 22 // Pwnagotchi SSH port
 	},
 
+	// Windows configuration
+	WINDOWS: false, // Flag to indicate if running on Windows
+	HASHCAT_PATH: "", // Path to Hashcat on Windows
+
 	// Paths for attach lists
 	WORDLISTS: [
 		"./hashcat/wordlists"
