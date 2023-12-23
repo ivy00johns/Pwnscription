@@ -10,7 +10,8 @@
 		"generate": "node ./pwnagetty/pwnagetty-generate.js",
 		"cli": "node ./cli/cli.mjs",
 		"passwords": "node ./utils/passwords/generator.js",
-		"combinations": "node ./utils/wordlist-rules-combinations/generator.js",
+		"rules-combinations": "node ./utils/wordlist-rules-combinations/generator.js",
+		"masks-combinations": "node ./utils/wordlist-masks-combinations/generator.js",
 		"results": "node ./scripts/cracked-networks-results.js",
 		"benchmark": "",
 		"hashcount": "node ./utils/benchmark/hashcount.mjs"
