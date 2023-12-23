@@ -645,5 +645,4 @@ Stopped: Sun Nov 12 20:02:49 2023
 - [ ] Add Flipper Zero notes.
 - [ ] Add Flipper Zero support.
 - [ ] Add tooling to calculate combinations for different attacks.
-- [ ] Move generators, combinations, benchmarking, etc. to a `utils` file.
 - [ ] New workflow images.
