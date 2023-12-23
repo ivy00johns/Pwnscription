@@ -15,7 +15,11 @@
 ----
 
 # Purpose
-I created this project to make the process of cracking Wi-Fi handshakes gathered by a `Pwnagotchi` using the `Hashcat` tooling, on both OS X and Windows, easier by generating the necessary terminal commands for you. I developed a CLI (`npm run cli`) utility that allows you to quickly build and execute `hashcat` commands from the terminal.
+As a noob to network security and `Pwnagotchis` in general, I delved into various articles and GitHub repositories in search of tooling to enhance my understanding of `Pwnagotchi` capabilities. Despite finding useful tools, I encountered outdated resources with unresolved issues.
+
+Motivated by this, I created this project to simplify the process of cracking Wi-Fi handshakes collected by a Pwnagotchi using the Hashcat tooling. This tool addresses common challenges and eases the workflow by generating the necessary terminal commands automatically. A dedicated CLI utility empowers (`npm run cli`) users to effortlessly construct and execute hashcat commands directly from the terminal.
+
+While primarily designed for Pwnagotchi, the project extends its utility to .pcap files collected by a `Flipper Zero` with a WiFi hat. Although it currently lacks built-in support for retrieving `.pcap` files from the `Flipper Zero`, you can manually move them into the `./handshakes/pcap` directory for seamless integration.
 
 ![Pwnagotchi Logo](./images/pwnagotchi.gif)
 
@@ -627,7 +631,7 @@ Stopped: Sun Nov 12 20:02:49 2023
 * https://hashcat.net/wiki/doku.php?id=rule_based_attack
 
 ## Masks
-* 
+* https://hashcat.net/wiki/doku.php?id=mask_attack
 
 ----
 
@@ -638,4 +642,7 @@ Stopped: Sun Nov 12 20:02:49 2023
 	No PMKID or HCCAPX found.
 	```
 - [ ] Find better names for the functions and commands.
-- [ ] Add custom attack options.
+- [ ] Add Flipper Zero notes.
+- [ ] Add Flipper Zero support.
+- [ ] Add tooling to calculate combinations for different attacks.
+- [ ] Move generators, combinations, benchmarking, etc. to a `utils` file.

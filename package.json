@@ -10,14 +10,34 @@
 		"generate": "node ./pwnagetty/pwnagetty-generate.js",
 		"cli": "node ./cli/cli.mjs",
 		"passwords": "node ./scripts/custom-wordlist-generator.js",
-		"combos": "node ./hashcat/generator/wordlist-combinations-generator.js",
-		"results": "node ./scripts/cracked-networks-results.js"
+		"combinations": "node ./utils/wordlist-rules-combinations/generator.js",
+		"results": "node ./scripts/cracked-networks-results.js",
+		"benchmark": "",
+		"hashcount": "node ./utils/benchmark/hashcount.mjs"
 	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/ivy00johns/pwnscription.git"
 	},
-	"keywords": [],
+	"keywords": [
+		"hashcat",
+		"password-cracking",
+		"security",
+		"penetration-testing",
+		"hacking-tools",
+		"cli",
+		"inquirer",
+		"node.js",
+		"command-line",
+		"automation",
+		"password-recovery",
+		"wordlist",
+		"brute-force",
+		"hybrid-attack",
+		"dictionary-attack",
+		"pwnagotchi",
+		"pwnagetty"
+	],
 	"author": "",
 	"license": "ISC",
 	"bugs": {
