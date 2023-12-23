@@ -18,8 +18,6 @@ module.exports = {
 	// Rule list permutations configurations
 	TEST_RULES_WORD_LIST: "./utils/wordlist-rules-combinations/base-word.txt",
 	TEST_MASKS_WORD_LIST: "./utils/wordlist-masks-combinations/base-word.txt",
-	TEST_RULES_FILE: "./hashcat/rules/__NSAKEY.v2.dive.rule",
-	TEST_MASKS_FILE: "./hashcat/masks/rockyou-1-60.hcmask",
 	WORDLIST_RULES_RESULTS_DIRECTORY: "./utils/wordlist-rules-combinations/results",
 	WORDLIST_MASKS_RESULTS_DIRECTORY: "./utils/wordlist-masks-combinations/results",
   	GENERIC_RULES_RESULTS_FILENAME: "wordlist-rules-combinations.txt",
