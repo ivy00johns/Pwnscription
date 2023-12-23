@@ -2,7 +2,7 @@ const fs     = require("fs");
 const config = require("../config");
 const logos = require("../../scripts/logos");
 
-const inputData = readFile(config.TEST_WORD_LIST);
+const inputData = readFile(config.TEST_RULES_WORD_LIST);
 const ruleData  = readRules(config.TEST_RULES_FILE);
 
 function readFile(filePath) {
@@ -329,10 +329,10 @@ const result = generate(inputData, ruleData, true);
 
 // Build the output filename based on the rule file name
 const ruleFileName = config.TEST_RULES_FILE.split("/").pop().replace(/\.[^/.]+$/, "");
-const outputFileName = `${ruleFileName}-${config.GENERIC_RESULTS_FILENAME}`;
+const outputFileName = `${ruleFileName}-${config.GENERIC_RULES_RESULTS_FILENAME}`;
 
 // Write result to the specified directory and filename
-const outputPath = `${config.RESULTS_DIRECTORY}/${outputFileName}`;
+const outputPath = `${config.WORDLIST_RULES_RESULTS_DIRECTORY}/${outputFileName}`;
 try {
 	fs.writeFileSync(outputPath, result);
 	console.log(`Generation successful. Check ${outputFileName} for the result. Lines written: ${result.split('\n').length}`);
