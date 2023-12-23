@@ -68,4 +68,4 @@ const outputFile = config.EXPORT_FILE_NAME;
 // Sort combinations alphabetically before writing to the file
 const sortedCombinations = filteredResult.sort(customSort);
 fs.writeFileSync(outputFile, sortedCombinations.slice(0, combinationsToGenerate).join("\n"));
-console.log(`Combinations written to ${outputFile}`);
+console.log(`Combinations written to ${outputFile}.`);
