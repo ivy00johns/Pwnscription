@@ -1,5 +1,5 @@
 {
-	"name": "Pwnscription",
+	"name": "pwnscription",
 	"version": "1.0.0",
 	"description": "",
 	"main": "index.js",
@@ -9,12 +9,8 @@
 		"vagrant-destroy": "cd ./windows/vagrant && vagrant destroy -f",
 		"generate": "node ./pwnagetty/pwnagetty-generate.js",
 		"cli": "node ./cli/cli.mjs",
-		"passwords": "node ./utils/passwords/generator.js",
-		"rules-combinations": "node ./utils/wordlist-rules-combinations/generator.js",
-		"masks-combinations": "node ./utils/wordlist-masks-combinations/generator.js",
 		"results": "node ./scripts/cracked-networks-results.js",
-		"benchmark": "",
-		"hashcount": "node ./utils/benchmark/hashcount.mjs"
+		"utils": "node ./utils/utils.mjs"
 	},
 	"repository": {
 		"type": "git",
