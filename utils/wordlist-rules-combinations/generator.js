@@ -1,5 +1,5 @@
 const fs     = require("fs");
-const config = require("../../config");
+const config = require("../config");
 const logos = require("../../scripts/logos");
 
 const inputData = readFile(config.TEST_WORD_LIST);

@@ -60,10 +60,4 @@ module.exports = {
 	// Length constraints for generated strings
 	MIN_LENGTH: 8, // Minimum length of generated strings
 	MAX_LENGTH: 25, // Maximum length of generated strings
-
-	// Rule list permutations configurations
-	TEST_WORD_LIST: "./hashcat/generator/base-word.txt",
-	TEST_RULES_FILE: "./hashcat/rules/__NSAKEY.v2.dive.rule",
-	RESULTS_DIRECTORY: "./hashcat/generator/results",
-  	GENERIC_RESULTS_FILENAME: "wordlist-plus-rule-combinations.txt"
 };
