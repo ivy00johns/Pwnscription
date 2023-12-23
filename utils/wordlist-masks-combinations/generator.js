@@ -1,61 +1,78 @@
 const fs = require("fs");
+const path = require("path");
 const config = require("../config");
-
-const inputData = readFile(config.TEST_MASKS_WORD_LIST);
-const maskData = readMasks(config.TEST_MASKS_FILE);
+const mainConfig = require("../../config");
 
 function readFile(filePath) {
-	try {
-		return fs.readFileSync(filePath, "utf8").split(/[\s,]+/).filter((v, i, a) => a.indexOf(v) === i).filter(function(e) {
-			return e === 0 || e;
-		});
-	} catch (error) {
-		console.error(`Error reading file ${filePath}: ${error.message}`);
-		process.exit(1);
-	}
+    try {
+        return fs.readFileSync(filePath, "utf8").split(/[\s,]+/).filter((v, i, a) => a.indexOf(v) === i).filter(function(e) {
+            return e === 0 || e;
+        });
+    } catch (error) {
+        console.error(`Error reading file ${filePath}: ${error.message}`);
+        process.exit(1);
+    }
 }
 
 function readMasks(filePath) {
-	try {
-		return fs
-			.readFileSync(filePath, "utf8")
-			.split("\n")
-			.map(line => line.trim())
-			.filter(line => line !== "");
-	} catch (error) {
-		console.error(`Error reading file ${filePath}: ${error.message}`);
-		process.exit(1);
-	}
+    try {
+        return fs
+            .readFileSync(filePath, "utf8")
+            .split("\n")
+            .map(line => line.trim())
+            .filter(line => line !== "");
+    } catch (error) {
+        console.error(`Error reading file ${filePath}: ${error.message}`);
+        process.exit(1);
+    }
 }
 
 function applyMask(string, mask) {
-	return string.replace(/./g, (char, index) => (mask.charAt(index) === "?" ? char : mask.charAt(index)));
+    return string.replace(/./g, (char, index) => (mask.charAt(index) === "?" ? char : mask.charAt(index)));
 }
 
 function generate(data, masks) {
-	const list = new Set();
-	for (let string of data) {
-		for (let mask of masks) {
-			const maskResult = applyMask(string, mask);
-			list.add(maskResult);
-		}
-	}
+    const list = new Set();
+    for (let string of data) {
+        for (let mask of masks) {
+            const maskResult = applyMask(string, mask);
+            list.add(maskResult);
+        }
+    }
 
-	const result = Array.from(list).join("\n");
-	return result;
+    const result = Array.from(list).join("\n");
+    return result;
 }
 
-const result = generate(inputData, maskData);
+function processFilesInDirectory(directoryPath) {
+    const files = fs.readdirSync(directoryPath);
 
-// Build the output filename based on the mask file name
-const maskFileName = config.TEST_MASKS_FILE.split("/").pop().replace(/\.[^/.]+$/, "");
-const outputFileName = `${maskFileName}-${config.GENERIC_MASKS_RESULTS_FILENAME}`;
+    files.forEach(file => {
+        const filePath = path.join(directoryPath, file);
 
-// Write result to the specified directory and filename
-const outputPath = `${config.WORDLIST_MASKS_RESULTS_DIRECTORY}/${outputFileName}`;
-try {
-	fs.writeFileSync(outputPath, result);
-	console.log(`Generation successful. Check ${outputFileName} for the result. Lines written: ${result.split("\n").length}`);
-} catch (error) {
-	console.error(`Error writing to ${outputFileName}: ${error.message}`);
+        if (fs.statSync(filePath).isFile()) {
+            const inputData = readFile(config.TEST_MASKS_WORD_LIST);
+            const maskData = readMasks(filePath);
+
+            const result = generate(inputData, maskData);
+
+            // Build the output filename based on the mask file name
+            const maskFileName = path.basename(filePath).replace(/\.[^/.]+$/, "");
+            const outputFileName = `${maskFileName}-${config.GENERIC_MASKS_RESULTS_FILENAME}`;
+
+            // Write result to the specified directory and filename
+            const outputPath = path.join(config.WORDLIST_MASKS_RESULTS_DIRECTORY, outputFileName);
+
+            try {
+                fs.writeFileSync(outputPath, result);
+                console.log(`Generation successful for ${file}. Check ${outputFileName} for the result. Lines written: ${result.split("\n").length}`);
+            } catch (error) {
+                console.error(`Error writing to ${outputFileName}: ${error.message}`);
+            }
+        }
+    });
 }
+
+// Replace 'YOUR_DIRECTORY_PATH' with the actual directory path you want to process
+const directoryPath = mainConfig.LOCAL_MASKS_DIRECTORY;
+processFilesInDirectory(directoryPath);
