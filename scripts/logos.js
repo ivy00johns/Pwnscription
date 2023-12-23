@@ -32,6 +32,23 @@ function printPwnagetty() {
 	`);
 }
 
+// Print logo
+function printWeakpass() {
+	console.log(`
+██╗    ██╗███████╗ █████╗ ██╗  ██╗██████╗  █████╗ ███████╗███████╗
+██║    ██║██╔════╝██╔══██╗██║ ██╔╝██╔══██╗██╔══██╗██╔════╝██╔════╝
+██║ █╗ ██║█████╗  ███████║█████╔╝ ██████╔╝███████║███████╗███████╗
+██║███╗██║██╔══╝  ██╔══██║██╔═██╗ ██╔═══╝ ██╔══██║╚════██║╚════██║
+╚███╔███╔╝███████╗██║  ██║██║  ██╗██║     ██║  ██║███████║███████║
+ ╚══╝╚══╝ ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝
+			
+	|==================================================|
+	| Original Weakpass code adapted for this project. |
+	| Github: https://github.com/zzzteph/weakpass      |
+	|==================================================|
+	`);
+}
+
 function printCrackedNetworks(networksCracked) {
     console.log(`
  ▄▄· ▄▄▄   ▄▄▄·  ▄▄· ▄ •▄ ▄▄▄ .·▄▄▄▄     ▐ ▄ ▄▄▄ .▄▄▄▄▄▄▄▌ ▐ ▄▌      ▄▄▄  ▄ •▄ .▄▄ · 
@@ -51,5 +68,6 @@ function printCrackedNetworks(networksCracked) {
 module.exports = {
     printPwnscription,
     printPwnagetty,
+	printWeakpass,
     printCrackedNetworks,
 };
