@@ -358,21 +358,123 @@ To generate the necessary `.hc22000`/`.pmkid` files needed to crack the WiFi han
 Are you looking to build and execute `hashcat` commands quickly based on the files you've already generated? Well you are in luck, I have added `cli` tooling to do just that. 
 
 1. Run `npm run cli` to get started.
-![](./images/cli-1.png)
+	```bash
+	? Select a command type: (Use arrow keys)
+	❯ Standard Commands 
+	Custom Commands 
+	Exit
+	```
 2. If you select `Standard Commands` you can execute one of the `npm run` commands listed in the `package.json` file.
-	1. Then select the command that you would like to execute.
-	* ![](./images/cli-2.png)
+	```bash
+	? Select a command type: Standard Commands
+	? Select a command to run: 
+	1) get: node ./pwnagetty/pwnagetty-get-pcaps.js
+	2) vagrant-up: cd ./windows/vagrant && vagrant up --provision
+	3) vagrant-destroy: cd ./windows/vagrant && vagrant destroy -f
+	4) generate: node ./pwnagetty/pwnagetty-generate.js
+	5) cli: node ./cli/cli.mjs
+	6) results: node ./scripts/cracked-networks-results.js
+	7) utils: node ./utils/utils.mjs
+	(Move up and down to reveal more choices)
+	Answer: 
+	```
 3. If you select `Custom Command` you can build a custom command based on existing files.
 	1. Select a `.hc22000` file that you would like to crack.
-	* ![](./images/cli-3.png)
-	2. Select a wordlist you'd like to use, you can also select "`NONE`" as an option.
-	*![](./images/cli-4.png)
-	3. Select a rule you'd like to use, you can also select "`NONE`" as an option.
-	* ![](./images/cli-5.png)
-4. Then you  can choose to either `Execute` the command or `Copy to Clipboard`.
-* ![](./images/cli-6.png)
-* ![](./images/cli-7.png)
-* ![](./images/cli-8.png)
+		```bash
+		? Select a command type: Custom Commands
+		? Select an .hccapx file: 
+		1) Network_a41162403502.hc22000
+		2) Network_6032b1a6ba8f.hc22000
+		3) Network_b0be76087bc1.hc22000
+		4) Network_929d7df8da01.hc22000
+		5) Network_0ceac9afd830.hc22000
+		6) Network_100c6bf75d1b.hc22000
+		7) Network_a063911647d0.hc22000
+		(Move up and down to reveal more choices)
+		Answer: 
+		```
+	2. Select the `.txt` or `.dic` wordlist you'd like to use, you can also select "`NONE`" as an option.
+		```bash
+		? Select a command type: Custom Commands
+		? Select an .hccapx file: Network_a41162403502.hc22000
+		? Select a wordlist file: 
+		1) generated-passwords.txt
+		2) known-passwords.dic
+		3) known-passwords.txt
+		4) rockyou.txt
+		5) NONE
+		Answer: 
+		```
+	3. Select a `.rule` file you'd like to use, you can also select "`NONE`" as an option.
+		```bash
+		? Select a command type: Custom Commands
+		? Select an .hccapx file: Network_a41162403502.hc22000
+		? Select a wordlist file: generated-passwords.txt
+		? Select a .rule file: 
+		1) 4-digit-append.rule
+		2) Incisive-leetspeak.rule
+		3) InsidePro-HashManager.rule
+		4) InsidePro-PasswordsPro.rule
+		5) OneRuleToRuleThemAll.rule
+		6) T0XlCv1.rule
+		7) T0XlCv2.rule
+		(Move up and down to reveal more choices)
+		Answer: 
+		```
+	4. Choice if you want to use a `.hcmask` file or not.
+		```bash
+		? Select a command type: Custom Commands
+		? Select an .hccapx file: Network_a41162403502.hc22000
+		? Select a wordlist file: generated-passwords.txt
+		? Select a .rule file: 4-digit-append.rule
+		? Do you want to use a mask? (y/N) 
+		```
+	5. Select a `.hcmask`, if you choice to use one.
+		```bash
+		? Select a command type: Custom Commands
+		? Select an .hccapx file: Network_a41162403502.hc22000
+		? Select a wordlist file: generated-passwords.txt
+		? Select a .rule file: 4-digit-append.rule
+		? Do you want to use a mask? Yes
+		? Select a .hcmask file: 
+		1) 8char-1l-1u-1d-1s-compliant.hcmask
+		2) 8char-1l-1u-1d-1s-noncompliant.hcmask
+		3) hashcat-default.hcmask
+		4) rockyou-1-60.hcmask
+		5) rockyou-2-1800.hcmask
+		6) rockyou-3-3600.hcmask
+		7) rockyou-4-43200.hcmask
+		(Move up and down to reveal more choices)
+		Answer: 
+		```
+	6. Select the `--attack-mode` you want to use based on your choices:
+		```bash
+		? Select a command type: Custom Commands
+		? Select an .hccapx file: Network_a41162403502.hc22000
+		? Select a wordlist file: generated-passwords.txt
+		? Select a .rule file: 4-digit-append.rule
+		? Do you want to use a mask? Yes
+		? Select a .hcmask file: 8char-1l-1u-1d-1s-compliant.hcmask
+		? Choose an attack mode: 
+		1) 0 - Straight Attack: Dictionary Attack
+		2) 9 - Hybrid Attack: Mask + Mask [DEFAULT]
+		Answer: 
+		```
+	4. You can then choose to `Execute` the command or `Copy to Clipboard`.
+		```bash
+		? Select a command type: Custom Commands
+		? Select an .hccapx file: Network_a41162403502.hc22000
+		? Select a wordlist file: generated-passwords.txt
+		? Select a .rule file: 4-digit-append.rule
+		? Do you want to use a mask? Yes
+		? Select a .hcmask file: 8char-1l-1u-1d-1s-compliant.hcmask
+		? Choose an attack mode: 0 - Straight Attack: Dictionary Attack
+		Generated Custom Command: hashcat --hash-type=22000 --attack-mode=0 --session Network_a41162403502-691 --hwmon-temp-abort=100 -w 2 --potfile-path "./hashcat/potfiles/Network_a41162403502-691-potfile.txt" --outfile "./hashcat/outputs/Network_a41162403502-691-output.txt" "./handshakes/hccapx/Network_a41162403502.hc22000" --rules-file="./hashcat/rules/4-digit-append.rule" "./hashcat/wordlists/generated-passwords.txt" "./hashcat/masks/8char-1l-1u-1d-1s-compliant.hcmask"
+		? Select an action: (Use arrow keys)
+		❯ Execute 
+		Copy to Clipboard 
+		Cancel 
+		```
 
 ### Command Breakdown
 * `hashcat` - "Hashcat is the world’s fastest CPU-based password recovery tool."
@@ -549,4 +651,4 @@ Stopped: Sun Nov 12 20:02:49 2023
 - [ ] Add Flipper Zero notes.
 - [ ] Add Flipper Zero support.
 - [ ] Add tooling to calculate combinations for different attacks.
-- [ ] New workflow images.
+- [ ] New workflow images. Replace images with terminal text results.

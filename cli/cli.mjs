@@ -117,7 +117,7 @@ async function run() {
 		const {
 			command
 		} = await inquirer.prompt([{
-			type: "list",
+			type: "rawlist",
 			name: "command",
 			message: "Select a command to run:",
 			choices: [...availableCommands, {
