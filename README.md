@@ -490,28 +490,6 @@ Candidate.Engine.: Device Generator
 Candidates.#1....: passwordMYWIFI0777 -> passwordMYWIFI0777
 Hardware.Mon.#1..: Util: 95%
 
-
-Session..........: EXAMPLE_a0648f5681d7_6215
-Status...........: Quit
-Hash.Mode........: 22000 (WPA-PBKDF2-PMKID+EAPOL)
-Hash.Target......: handshakes/hccapx/EXAMPLE_a0648f5681d7.hc22000
-Time.Started.....: Sun Nov 12 20:02:04 2023 (44 secs)
-Time.Estimated...: Sun Nov 12 21:02:18 2023 (59 mins, 30 secs)
-Kernel.Feature...: Pure Kernel
-Guess.Base.......: File (wordlists/known-passwords.txt), Left Side
-Guess.Mod........: Mask (MYWIFI?d?d?d?d) [10], Right Side
-Guess.Queue.Base.: 1/1 (100.00%)
-Guess.Queue.Mod..: 1/1 (100.00%)
-Speed.#1.........:        6 H/s (0.27ms) @ Accel:1024 Loops:8 Thr:32 Vec:1
-Recovered........: 0/12 (0.00%) Digests (total), 0/12 (0.00%) Digests (new)
-Progress.........: 244/20000 (1.22%)
-Rejected.........: 0/244 (0.00%)
-Restore.Point....: 0/2 (0.00%)
-Restore.Sub.#1...: Salt:0 Amplifier:122-123 Iteration:0-12
-Candidate.Engine.: Device Generator
-Candidates.#1....: passwordMYWIFI0777 -> passwordMYWIFI0777
-Hardware.Mon.#1..: Util: 95%
-
 [s]tatus [p]ause [b]ypass [c]heckpoint [f]inish [q]uit => Started: Sun Nov 12 20:01:49 2023
 Stopped: Sun Nov 12 20:02:49 2023
 ```
