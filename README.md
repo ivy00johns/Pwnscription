@@ -28,15 +28,14 @@ In order to create the project I started by combining and refactoring different 
 * [Pwnagetty](https://github.com/CyrisXD/Pwnagetty): [CyrisXD](https://github.com/CyrisXD)
 * [Weakpass](https://github.com/zzzteph/weakpass): [zzzteph](https://github.com/zzzteph)
 
-## Included Tooling
+## Tooling
 * `npm run get`: OS X - Download the `.pcap` files from your `Pwnagotchi`.
 	* `npm run vagrant-up`: Windows - Download the `.pcap` files from your `Pwnagotchi`.
 	* `npm run vagrant-destroy`: Windows - Delete the Vagrant image when you are done.
 * `npm run generate`: Generate the `.hc22000` and `.pmkid` files for `hashcat` to crack based on the `.pcap` files you download.
 * `npm run cli`: Run the availabe `npm run` commands as well as building `hashcat` scripts quickly.
-* `npm run passwords`: Generate a custom wordlist containing all combinations of the `WORD_LIST` in the `config.js` file.
-* `npm run combos`: Generate the results of what happens when a `.rule` file is applied to a wordlist file for a better understanding of what `.rule` files do in `hashcat`.
 * `npm run results`: Displays a list of cracked networks in the terminal.
+* `npm run utils`: Run a set of built in utilities.
 
 # Table Of Contents
 * [Dependencies](#dependencies)
@@ -54,7 +53,6 @@ In order to create the project I started by combining and refactoring different 
 * [Additional Configuration Steps](#additional-configuration-steps)
 	* [Wordlists](#wordlists)
 		* [Known Password Wordlist](#known-password-wordlist)
-		* [Custom Wordlists](#custom-wordlists)
 		* [Standalone Wordlists](#standalone-wordlists)
 		* [Standalone Dictionaries](#standalone-dictionaries)
 		* [Misc Wordlists](#misc-wordlists)
@@ -63,7 +61,6 @@ In order to create the project I started by combining and refactoring different 
 		* [Windows](#unzip-windows)
 	* [Rules](#rules)
 		* [Included Rules](#included-rules)
-		* [Rule Combinations Generation](#rule-combinations-generation)
 	* [Masks](#masks)
 		* [Included Masks](#included-masks)
 * [Scripts](#scripts)
@@ -79,9 +76,8 @@ In order to create the project I started by combining and refactoring different 
 			* [--attack-mode=6](#attack-mode6)
 			* [--attack-mode=9](#attack-mode9)
 		* [Example Terminal Output](#example-terminal-output)
-	* [Password Generator](#custom-wordlists)
-	* [(.rule * .txt) Results](#rule-combinations-generation)
 	* [Cracked Network Results](#cracked-networks-results)
+* [Utilities](./utils/README.md)
 * [Troubleshooting](#troubleshooting)
 * [Links](#links)
 * [To-Do](#to-do)
@@ -198,44 +194,6 @@ WORDLISTS: [
 	1. `cp ./hashcat/known-passwords.example.txt ./hashcat/wordlists/known-passwords.txt`
 	2. `cp ./hashcat/known-passwords.example.dic ./hashcat/wordlists/known-passwords.dic`
 
-### Custom Wordlists
-You can generate a list of possible passwords based on a couple of clues that could have be used to build the password you want to crack.
-
-```javascript
-...
-// General configurations
-PRINT_ITEMS: 10, // Number of items to print in the terminal
-GENERATE_PERMUTATIONS: 2000, // Number of permutations to generate and add to the .txt file
-EXPORT_FILE_NAME: "./hashcat/wordlists/generated-passwords.txt", // Name of the exported file
-WORD_LIST: [], // List of words for generation
-MAX_WORDS_USED: 2, // Max number of words that can be combined to form a given string
-...
-```
-
-1. Edit the `config.js` file and add your clues to the `WORD_LIST: []` array.
-	- `WORD_LIST: [A, B, C, D, E]`
-2. Set the `MAX_WORDS_USED` variable to configure how many words will be contained in the final results:
-	* 1 => `[A, B, C, D, E]` - 5 results
-	* 2 => `[A, B, C, D, E, AB, AC, AD, AE, BA, BC, BD, BE, CA, CB, CD, CE, DA, DB, DC, DE, EA, EB, EC, ED]` - 25 results
-	* Etc...
-3. Run the `npm run passwords` command to generate a list of possible password combinations.
-	* `["A", "AB", "AC", "AD", "AE", "B", "BA", "BC", "BD", "BE", "C", "CA", "CB", "CD", "CE", "D", "DA", "DB", "DC", "DE", "E", "EA", "EB", "EC", "ED"]`
-4. It will export the list to a `.txt` file at the specificed location, `EXPORT_FILE_NAME`, by default:
-	* `./hashcat/wordlists/generated-passwords.txt`
-5. For example say you set the `WORD_LIST:` to `["cat", "dog", "rat"]`, you would get the following results:
-	```text
-	cat
-	catdog
-	catrat
-	dog
-	dogcat
-	dograt
-	rat
-	ratcat
-	ratdog
-	```
-6. You can then use the `generated-passwords.txt` file to try and crack the network passowrd by running `npm run scripts` again and looking for the wordlist in the generated script file for a given network.
-
 ### Standalone Wordlists
 * [netgear-spectrum.txt](https://raw.githubusercontent.com/soxrok2212/PSKracker/master/dicts/netgear-spectrum/netgear-spectrum.txt)
 	* Part of the much larger colleciton [PSKracker](https://github.com/soxrok2212/PSKracker) by [soxrok2212](https://github.com/soxrok2212/).
@@ -322,38 +280,6 @@ Hashcat rules are a powerful tool for cracking passwords, but they are also a va
 * [toggles5](https://github.com/hashcat/hashcat/blob/master/rules/toggles5.rule) - ? variations per word.
 * [unix-ninja-leetspeak](https://github.com/hashcat/hashcat/blob/master/rules/unix-ninja-leetspeak.rule) - ? variations per word.
 * [wifi]() - 59 variations per word.
-
-### Rule Combinations Generation 
-Are you interested in what a `.rule` file generates? I've include the logic to help answer this questions.
-
-* In the `config.js` file there are a few variables to help with this process. In them you can point to specific `.rule` and `.txt` files to create a list of the results when they are combined. By default it uses the `base-word.txt` file that contains the word `password`, and points to the `base64` rule set.
-	```javascript
-	...
-	// Rule list permutations configurations
-	TEST_WORD_LIST: "./hashcat/generator/base-word.txt",
-	TEST_RULES_FILE: "./hashcat/rules/_NSAKEY.v2.dive.rule",
-	RESULTS_DIRECTORY: "./hashcat/generator/results",
-  	GENERIC_RESULTS_FILENAME: "wordlist-plus-rule-combinations.txt"
-	...
-	```
-
-1. Run the `npm run combos` command to generate the list of strings that `hashcat` will generate in its work.
-2. With the default configuration you will get the following results, truncated for readability.
-	```text
-	password
-	sswordpasswordpa
-	swordpas
-	wordpass
-	ordpassw
-	rdpasswo
-	passwore
-	passwora
-	dpasswor
-	sswordpa
-	```
-3. By default the results each of the provided `.rule` files applied to the word `password` is provided in the `./hashcat/generator/results` directory.
-
-**PLEASE NOTE**: There are certain rules in some `.rule` files that are not currently implemented in the `wordlist-combinations-generator.js` logic so the `x variations` counts can be lower than expected.
 
 ## Masks
 <pre>
