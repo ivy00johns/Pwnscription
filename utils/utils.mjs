@@ -9,7 +9,7 @@ const Spinner = CLI.Spinner;
 
 // Function to get available commands from package.json
 function getAvailableCommands() {
-	const packageJsonPath = "./utils/commands.json";
+	const packageJsonPath = "./utils/package.json";
 
 	try {
 		const packageJsonData = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
@@ -21,7 +21,7 @@ function getAvailableCommands() {
 				value: script,
 			}));
 		} else {
-			console.error(chalk.red("No scripts found in package.json."));
+			console.error(chalk.red("No scripts found in ./utils/package.json."));
 			process.exit(1);
 		}
 	} catch (error) {
@@ -33,7 +33,7 @@ function getAvailableCommands() {
 // Function to run a command using npm
 async function runCommand(command) {
 	try {
-		execSync(`npm run ${command}`, {
+		execSync(`npm run --prefix ./utils ${command}`, {
 			stdio: "inherit"
 		});
 	} catch (error) {

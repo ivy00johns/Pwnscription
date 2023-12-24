@@ -62,7 +62,7 @@ console.log(`Printing ${itemsToPrint} items:`);
 console.log(filteredResult.slice(0, itemsToPrint));
 
 // Write the specified number of combinations to a file
-const combinationsToGenerate = config.GENERATE_COMBINATIONS;
+const combinationsToGenerate = config.GENERATE_PERMUTATIONS;
 const outputFile = config.EXPORT_FILE_NAME;
 
 // Sort combinations alphabetically before writing to the file

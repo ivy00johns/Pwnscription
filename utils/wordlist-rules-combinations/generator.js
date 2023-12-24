@@ -2,7 +2,6 @@ const fs = require("fs");
 const path = require("path");
 const config = require("../config");
 const logos = require("../../scripts/logos");
-const mainConfig = require("../../config");
 
 function readFile(filePath) {
     try {
@@ -354,5 +353,5 @@ function processFilesInDirectory(directoryPath) {
 }
 
 // Replace "YOUR_DIRECTORY_PATH" with the actual directory path you want to process
-const directoryPath = mainConfig.LOCAL_RULES_DIRECTORY;
+const directoryPath = config.LOCAL_RULES_DIRECTORY;
 processFilesInDirectory(directoryPath);
