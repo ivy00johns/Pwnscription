@@ -8,7 +8,7 @@
 		"vagrant-up": "cd ./windows/vagrant && vagrant up --provision",
 		"vagrant-destroy": "cd ./windows/vagrant && vagrant destroy -f",
 		"generate": "node ./pwnagetty/pwnagetty-generate.js",
-		"cli": "node ./cli/cli.mjs",
+		"cli": "node ./utils/cli/cli.mjs",
 		"results": "node ./scripts/cracked-networks-results.js",
 		"utils": "node ./utils/utils.mjs"
 	},

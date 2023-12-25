@@ -7,7 +7,7 @@ import clipboardy from "clipboardy";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import * as path from "path";
-import config from "../config.js";
+import config from "../../config.js";
 
 // Get the current file and directory names
 const __filename = fileURLToPath(import.meta.url);
@@ -211,12 +211,12 @@ async function generateCustomCommand(hccapx, wordlist, rules, useMasks, customMa
 	const sessionBaseName = hccapx.replace(/\.hc22000$/, "");
 	const sessionName     = `${sessionBaseName}-${randomNumber}`;
 
-	const hccapxPath   = `${path.join(projectDirectory, "..", config.LOCAL_HCCAPX_DIRECTORY, hccapx)}`;
-	const outputPath   = `${path.join(projectDirectory, "..", config.LOCAL_OUTPUT_FILE_DIRECTORY, `${sessionName}-output.txt`)}`;
-	const potfilePath  = `${path.join(projectDirectory, "..", config.LOCAL_POTFILES_DIRECTORY, `${sessionName}-potfile.txt`)}`;
-	const wordlistPath = `${path.join(projectDirectory, "..", config.LOCAL_WORLISTS_DIRECTORY, wordlist)}`;
-	const rulePath     = `${path.join(projectDirectory, "..", config.LOCAL_RULES_DIRECTORY, rules)}`;
-	const maskPath     = `${path.join(projectDirectory, "..", config.LOCAL_MASKS_DIRECTORY, customMask)}`;
+	const hccapxPath   = `${path.join(projectDirectory, "../..", config.LOCAL_HCCAPX_DIRECTORY, hccapx)}`;
+	const outputPath   = `${path.join(projectDirectory, "../..", config.LOCAL_OUTPUT_FILE_DIRECTORY, `${sessionName}-output.txt`)}`;
+	const potfilePath  = `${path.join(projectDirectory, "../..", config.LOCAL_POTFILES_DIRECTORY, `${sessionName}-potfile.txt`)}`;
+	const wordlistPath = `${path.join(projectDirectory, "../..", config.LOCAL_WORLISTS_DIRECTORY, wordlist)}`;
+	const rulePath     = `${path.join(projectDirectory, "../..", config.LOCAL_RULES_DIRECTORY, rules)}`;
+	const maskPath     = `${path.join(projectDirectory, "../..", config.LOCAL_MASKS_DIRECTORY, customMask)}`;
 
 	async function generatePrompt(choiceValues, defaultValue) {
 		const attackModeNames = {
