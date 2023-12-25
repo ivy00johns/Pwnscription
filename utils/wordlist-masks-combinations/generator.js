@@ -78,6 +78,5 @@ function processFilesInDirectory(directoryPath) {
 	});
 }
 
-// Replace 'YOUR_DIRECTORY_PATH' with the actual directory path you want to process
 const directoryPath = config.LOCAL_MASKS_DIRECTORY;
 processFilesInDirectory(directoryPath);
