@@ -35,7 +35,7 @@ In order to create the project I started by combining and refactoring different 
 * `npm run generate`: Generate the `.hc22000` and `.pmkid` files for `hashcat` to crack based on the `.pcap` files you download.
 * `npm run cli`: Run the availabe `npm run` commands as well as building `hashcat` scripts quickly.
 * `npm run results`: Displays a list of cracked networks in the terminal.
-* `npm run utils`: Run a set of built in utilities.
+* `npm run utils`: Run a set of cutsom utilities.
 
 # Table Of Contents
 * [Dependencies](#dependencies)
@@ -108,6 +108,7 @@ I've also included a `minimal-config.toml` file with the bare minimal configurat
 | [Original](https://github.com/evilsocket/pwnagotchi/)      | [default.toml](https://github.com/evilsocket/pwnagotchi/blob/master/pwnagotchi/defaults.toml)    			 | `./pwnagotchi/defaults-original.toml`     |
 | [Torch](https://github.com/jayofelony/pwnagotchi-torch)    | [default.toml](https://github.com/jayofelony/pwnagotchi-torch/blob/pwnagotchi-torch/pwnagotchi/defaults.toml) | `./pwnagotchi/defaults-torch.toml`        |
 | [Aluminum-Ice](https://github.com/aluminum-ice/pwnagotchi) | [default.toml](https://github.com/aluminum-ice/pwnagotchi/blob/master/pwnagotchi/defaults.toml)    			 | `./pwnagotchi/defaults-aluminum-ice.toml` |
+| Minimal Config 											 | N/A																											 | `./pwnagotchi/minimal-config.toml`		 |
 
 ## Setup
 * Official
@@ -253,33 +254,33 @@ Hashcat rules are a powerful tool for cracking passwords, but they are also a va
 	* Hashcat explained: How this password cracker works: https://www.youtube.com/watch?v=OPTJei6cnw4
 
 ### Included Rules
-* [NSAKEY.v2.dive](https://github.com/NSAKEY/nsa-rules/blob/master/_NSAKEY.v2.dive.rule) - 83,203 variations per word.
+* [NSAKEY.v2.dive](https://github.com/NSAKEY/nsa-rules/blob/master/_NSAKEY.v2.dive.rule) - 123,289 variations per word.
 * [4-digit-append]() - 11,110 variations per word.
-* [best64](https://trustedsec.com/blog/better-hacking-through-cracking-know-your-rules) - 53 variations per word.
+* [best64](https://trustedsec.com/blog/better-hacking-through-cracking-know-your-rules) - 77 variations per word.
 * [bssid]() - ? variations per word.
-* [clem9669_medium](https://github.com/clem9669/hashcat-rule) - 160,362 variations per word.
-* [d3ad0ne](https://github.com/hashcat/hashcat/blob/master/rules/d3ad0ne.rule) - 12,513 variations per word.
-* [d3adhob0](https://github.com/praetorian-inc/Hob0Rules/blob/master/d3adhob0.rule) - 57,489 variations per word.
-* [dive](https://github.com/hashcat/hashcat/blob/master/rules/dive.rule) - 35,090 variations per word.
-* [generated2](https://github.com/hashcat/hashcat/blob/master/rules/generated2.rule) - 22,499 variations per word.
+* [clem9669_medium](https://github.com/clem9669/hashcat-rule) - 170,500 variations per word.
+* [d3ad0ne](https://github.com/hashcat/hashcat/blob/master/rules/d3ad0ne.rule) - 34,097 variations per word.
+* [d3adhob0](https://github.com/praetorian-inc/Hob0Rules/blob/master/d3adhob0.rule) - 57,540 variations per word.
+* [dive](https://github.com/hashcat/hashcat/blob/master/rules/dive.rule) - 99,088 variations per word.
+* [generated2](https://github.com/hashcat/hashcat/blob/master/rules/generated2.rule) - 65,118 variations per word.
 * [hob064](https://github.com/praetorian-inc/Hob0Rules) - 56 variations per word.
-* [Incisive-leetspeak]() - ? variations per word.
-* [InsidePro-PasswordsPro](https://github.com/hashcat/hashcat/blob/master/rules/InsidePro-PasswordsPro.rule) - 3,556 variations per word.
-* [InsidePro-HashManager](https://github.com/hashcat/hashcat/blob/master/rules/InsidePro-HashManager.rule) - 2,484 variations per word.
-* [names]() - 85 variations per word.
-* [OneRuleToRuleThemAll]() - 35,474 variations per word.
-* [passphrase-rule1]() - ? variations per word.
-* [passphrase-rule2]() - 75? variations per word.
-* [passphrases]() - ? variations per word.
-* [quick--sid]() - 54 variations per word.
-* [rockyou-30000](https://github.com/hashcat/hashcat/blob/master/rules/rockyou-30000.rule) - 20,777 variations per word.
-* [ssid-ninja]() - 42 variations per word.
-* [ssid]() - 82 variations per word.
-* [T0XICv1](https://github.com/samirettali/password-cracking-rules/blob/master/T0XlCv1.rule) - 9,537 variations per word.
-* [T0XICv2](https://github.com/hashcat/hashcat/blob/master/rules/T0XlCv2.rule) - 15,334 variations per word.
-* [toggles5](https://github.com/hashcat/hashcat/blob/master/rules/toggles5.rule) - ? variations per word.
-* [unix-ninja-leetspeak](https://github.com/hashcat/hashcat/blob/master/rules/unix-ninja-leetspeak.rule) - ? variations per word.
-* [wifi]() - 59 variations per word.
+* [Incisive-leetspeak]() - 15,487 variations per word.
+* [InsidePro-PasswordsPro](https://github.com/hashcat/hashcat/blob/master/rules/InsidePro-PasswordsPro.rule) - 6,470 variations per word.
+* [InsidePro-HashManager](https://github.com/hashcat/hashcat/blob/master/rules/InsidePro-HashManager.rule) - 3,120 variations per word.
+* [names]() - 92 variations per word.
+* [OneRuleToRuleThemAll]() - 51,995 variations per word.
+* [passphrase-rule1]() - 16 variations per word.
+* [passphrase-rule2]() - 81 variations per word.
+* [passphrases]() - 69 variations per word.
+* [quick--sid]() - 60 variations per word.
+* [rockyou-30000](https://github.com/hashcat/hashcat/blob/master/rules/rockyou-30000.rule) - 30,000 variations per word.
+* [ssid-ninja]() - 48 variations per word.
+* [ssid]() - 89 variations per word.
+* [T0XICv1](https://github.com/samirettali/password-cracking-rules/blob/master/T0XlCv1.rule) - 11,931 variations per word.
+* [T0XICv2](https://github.com/hashcat/hashcat/blob/master/rules/T0XlCv2.rule) - 19,562 variations per word.
+* [toggles5](https://github.com/hashcat/hashcat/blob/master/rules/toggles5.rule) - 4,943 variations per word.
+* [unix-ninja-leetspeak](https://github.com/hashcat/hashcat/blob/master/rules/unix-ninja-leetspeak.rule) - 3,071 variations per word.
+* [wifi]() - 64 variations per word.
 
 ## Masks
 <pre>
@@ -651,4 +652,3 @@ Stopped: Sun Nov 12 20:02:49 2023
 - [ ] Add Flipper Zero notes.
 - [ ] Add Flipper Zero support.
 - [ ] Add tooling to calculate combinations for different attacks.
-- [ ] New workflow images. Replace images with terminal text results.
