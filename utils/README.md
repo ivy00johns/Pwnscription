@@ -107,3 +107,5 @@ Are you interested in what a `.rule` file generates? I've include the logic to h
 
 ----
 
+# TO-DO
+- [ ] Add tooling to calculate combinations for different attacks.

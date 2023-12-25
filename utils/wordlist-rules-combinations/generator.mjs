@@ -23,10 +23,12 @@ async function runCommand(wordlist, rulesFile) {
 	try {
 		const wordlistName = path.basename(wordlist).replace(/\.[^/.]+$/, "");
 		const ruleFileName = path.basename(rulesFile).replace(/\.[^/.]+$/, "");
+		const outputFilePath = `../utils/wordlist-rules-combinations/results/${wordlistName}+${ruleFileName}.txt`;
 
-		execSync(`hashcat --stdout "${wordlist}" -r "${rulesFile}" -o "../utils/wordlist-rules-combinations/results/${wordlistName}+${ruleFileName}.txt"`, {
+		execSync(`hashcat --stdout "${wordlist}" -r "${rulesFile}" > "${outputFilePath}"`, {
 			stdio: "inherit"
 		});
+		console.log(chalk.green(`Output saved to: ${outputFilePath}`));
 	} catch (error) {
 		console.error(chalk.red(`Error running command: ${error.message}`));
 	}
@@ -50,7 +52,7 @@ async function run() {
 		type: "rawlist",
 		name: "selectedRules",
 		message: "Select a .rule file:",
-		choices: [...rulesFiles, "NONE", "Exit"]
+		choices: ["ALL", ...rulesFiles, "NONE", "Exit"]
 	}]);
 
 	if (selectedWordlist === "Exit" || selectedRules === "Exit") {
@@ -59,27 +61,42 @@ async function run() {
 	}
 
 	if (selectedWordlist !== "Exit" || selectedRules !== "Exit") {
-		let wordlistPath;
+		if (selectedRules === "ALL") {
+			// Process all .rule files in the directory
+			rulesFiles.forEach(async (ruleFile) => {
+				const wordlistPath = getWordlistPath(selectedWordlist);
+				const rulePath = path.join(projectDirectory, "..", config.LOCAL_RULES_DIRECTORY, ruleFile);
 
-		if (selectedWordlist === "base-word.txt") {
-			wordlistPath = `${path.join(projectDirectory, "..", selectedWordlist)}`;
+				const status = new Spinner(`Processing ${ruleFile}...`);
+				status.start();
+
+				await runCommand(wordlistPath, rulePath);
+
+				status.stop();
+			});
 		} else {
-			wordlistPath = `${path.join(projectDirectory, "..", config.LOCAL_WORLISTS_DIRECTORY, selectedWordlist)}`;
+			const wordlistPath = getWordlistPath(selectedWordlist);
+			const rulePath = path.join(projectDirectory, "..", config.LOCAL_RULES_DIRECTORY, selectedRules);
+
+			const status = new Spinner("Processing...");
+			status.start();
+
+			// Simulate an asynchronous operation
+			setTimeout(() => {
+				status.stop();
+
+				// Run the selected command
+				runCommand(wordlistPath, rulePath);
+			}, 500);
 		}
-
-		const rulePath = `${path.join(projectDirectory, "..", config.LOCAL_RULES_DIRECTORY, selectedRules)}`;
-
-		const status = new Spinner("Loading...");
-		status.start();
-
-		// Simulate an asynchronous operation
-		setTimeout(() => {
-			status.stop();
-
-			// Run the selected command
-			runCommand(wordlistPath, rulePath);
-		}, 500);
 	}
+}
+
+// Helper function to get the wordlist path based on the selection
+function getWordlistPath(selectedWordlist) {
+	return selectedWordlist === "base-word.txt"
+		? path.join(projectDirectory, "..", selectedWordlist)
+		: path.join(projectDirectory, "..", config.LOCAL_WORLISTS_DIRECTORY, selectedWordlist);
 }
 
 run();

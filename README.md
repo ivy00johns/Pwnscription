@@ -651,4 +651,3 @@ Stopped: Sun Nov 12 20:02:49 2023
 - [ ] Find better names for the functions and commands.
 - [ ] Add Flipper Zero notes.
 - [ ] Add Flipper Zero support.
-- [ ] Add tooling to calculate combinations for different attacks.
