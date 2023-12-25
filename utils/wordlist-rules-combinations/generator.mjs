@@ -3,11 +3,10 @@ import inquirer from "inquirer";
 import CLI from "clui";
 import fs from "fs";
 import { execSync } from "child_process";
-import clipboardy from "clipboardy";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import * as path from "path";
-import config from "../../config.js";
+import config from "../config.js";
 
 // Get the current file and directory names
 const __filename = fileURLToPath(import.meta.url);
@@ -25,7 +24,7 @@ async function runCommand(wordlist, rulesFile) {
 		const wordlistName = path.basename(wordlist).replace(/\.[^/.]+$/, "");
 		const ruleFileName = path.basename(rulesFile).replace(/\.[^/.]+$/, "");
 
-		execSync(`hashcat --stdout "${wordlist}" -r "${rulesFile}" -o "./utils/wordlist-rules-combinations/results/${wordlistName}+${ruleFileName}.txt"`, {
+		execSync(`hashcat --stdout "${wordlist}" -r "${rulesFile}" -o "../utils/wordlist-rules-combinations/results/${wordlistName}+${ruleFileName}.txt"`, {
 			stdio: "inherit"
 		});
 	} catch (error) {
@@ -63,12 +62,12 @@ async function run() {
 		let wordlistPath;
 
 		if (selectedWordlist === "base-word.txt") {
-			wordlistPath = `${path.join(projectDirectory, selectedWordlist)}`;
+			wordlistPath = `${path.join(projectDirectory, "..", selectedWordlist)}`;
 		} else {
-			wordlistPath = `${path.join(projectDirectory, "../..", config.LOCAL_WORLISTS_DIRECTORY, selectedWordlist)}`;
+			wordlistPath = `${path.join(projectDirectory, "..", config.LOCAL_WORLISTS_DIRECTORY, selectedWordlist)}`;
 		}
-		
-		const rulePath = `${path.join(projectDirectory, "../..", config.LOCAL_RULES_DIRECTORY, selectedRules)}`;
+
+		const rulePath = `${path.join(projectDirectory, "..", config.LOCAL_RULES_DIRECTORY, selectedRules)}`;
 
 		const status = new Spinner("Loading...");
 		status.start();

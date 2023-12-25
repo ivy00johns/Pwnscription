@@ -33,7 +33,7 @@ function applyMask(string, mask) {
 	// Use slice to ensure the mask length matches the input string length
 	const adjustedMask = repeatedMask.slice(0, string.length);
 
-	return string.split('').map((char, index) => (adjustedMask.charAt(index) === '?' ? char : adjustedMask.charAt(index))).join('');
+	return string.split("").map((char, index) => (adjustedMask.charAt(index) === "?" ? char : adjustedMask.charAt(index))).join("");
 }
 
 function generate(data, masks) {
@@ -45,7 +45,7 @@ function generate(data, masks) {
 		}
 	}
 
-	const result = Array.from(list).join('\n');
+	const result = Array.from(list).join("\n");
 	return result;
 }
 
