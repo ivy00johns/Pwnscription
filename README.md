@@ -35,7 +35,7 @@ In order to create the project I started by combining and refactoring different 
 * `npm run generate`: Generate the `.hc22000` and `.pmkid` files for `hashcat` to crack based on the `.pcap` files you download.
 * `npm run cli`: Run the availabe `npm run` commands as well as building `hashcat` scripts quickly.
 * `npm run results`: Displays a list of cracked networks in the terminal.
-* `npm run utils`: Run a set of cutsom utilities.
+* `npm run utils`: Run a set of cutsom [utilities](./utils/README.md).
 
 # Table Of Contents
 * [Dependencies](#dependencies)
@@ -198,15 +198,11 @@ WORDLISTS: [
 ### Standalone Wordlists
 * [netgear-spectrum.txt](https://raw.githubusercontent.com/soxrok2212/PSKracker/master/dicts/netgear-spectrum/netgear-spectrum.txt)
 	* Part of the much larger colleciton [PSKracker](https://github.com/soxrok2212/PSKracker) by [soxrok2212](https://github.com/soxrok2212/).
-
 * [openwall.net-all.txt](https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/openwall.net-all.txt)
 	* Part of the [DanielMiessler's SecLists](https://github.com/danielmiessler/SecLists/) larger collection of [passwords](https://github.com/danielmiessler/SecLists/tree/master/Passwords).
-
 * [shortKrak.txt](https://raw.githubusercontent.com/praetorian-inc/Hob0Rules/master/wordlists/shortKrak.txt)
 	* Part of the [praetorian-inc/Hob0Rules](https://github.com/praetorian-inc/Hob0Rules/) collection of [wordlists](https://github.com/praetorian-inc/Hob0Rules/tree/master/wordlists).
-
 * [nerdlist.txt](https://raw.githubusercontent.com/TheNerdlist/nerdlist/main/nerdlist.txt)
-
 * [English Words](https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt)
 
 ### Standalone Dictionaries
