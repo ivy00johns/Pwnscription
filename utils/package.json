@@ -1,0 +1,9 @@
+{
+	"name": "pwnscription_utilities",
+	"version": "1.0.0",
+	"scripts": {
+		"passwords": "node ../utils/passwords/generator.js",
+		"rules-combinations": "node ../utils/wordlist-rules-combinations/generator.mjs",
+		"masks-combinations": "node ../utils/wordlist-masks-combinations/generator.mjs"
+	}
+}

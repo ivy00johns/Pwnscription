@@ -143,6 +143,12 @@ hashcat/scripts/*
 config.js
 pwnagotchi/config.toml
 
+# Results
+utils/wordlist-masks-combinations/results/*
+!base-word*
+utils/wordlist-rules-combinations/results/*
+!base-word*
+
 # Handshakes
 handshakes/pcap/*
 handshakes/hccapx/*
@@ -151,13 +157,6 @@ handshakes/pmkid/*
 # Logs
 hashcat/outputs/*
 hashcat/potfiles/*
-
-# attacks list
-attacks-list.js
-
-# attack scripts
-hashcat/attack-scripts/*
-!example.txt
 
 # Wordlists
 known-passwords.txt

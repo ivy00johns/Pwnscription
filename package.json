@@ -1,5 +1,5 @@
 {
-	"name": "Pwnscription",
+	"name": "pwnscription",
 	"version": "1.0.0",
 	"description": "",
 	"main": "index.js",
@@ -8,16 +8,33 @@
 		"vagrant-up": "cd ./windows/vagrant && vagrant up --provision",
 		"vagrant-destroy": "cd ./windows/vagrant && vagrant destroy -f",
 		"generate": "node ./pwnagetty/pwnagetty-generate.js",
-		"cli": "node ./cli/cli.mjs",
-		"passwords": "node ./scripts/custom-wordlist-generator.js",
-		"combos": "node ./hashcat/generator/wordlist-combinations-generator.js",
-		"results": "node ./scripts/cracked-networks-results.js"
+		"cli": "node ./utils/cli/cli.mjs",
+		"results": "node ./scripts/cracked-networks-results.js",
+		"utils": "node ./utils/utils.mjs"
 	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/ivy00johns/pwnscription.git"
 	},
-	"keywords": [],
+	"keywords": [
+		"hashcat",
+		"password-cracking",
+		"security",
+		"penetration-testing",
+		"hacking-tools",
+		"cli",
+		"inquirer",
+		"node.js",
+		"command-line",
+		"automation",
+		"password-recovery",
+		"wordlist",
+		"brute-force",
+		"hybrid-attack",
+		"dictionary-attack",
+		"pwnagotchi",
+		"pwnagetty"
+	],
 	"author": "",
 	"license": "ISC",
 	"bugs": {
