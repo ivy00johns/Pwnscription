@@ -4,8 +4,6 @@
 	"scripts": {
 		"passwords": "node ../utils/passwords/generator.js",
 		"rules-combinations": "node ../utils/wordlist-rules-combinations/generator.mjs",
-		"masks-combinations": "node ../utils/wordlist-masks-combinations/generator.js",
-		"benchmark": "",
-		"hashcount": "node ../utils/benchmarks/hashcount.js"
+		"masks-combinations": "node ../utils/wordlist-masks-combinations/generator.mjs"
 	}
 }

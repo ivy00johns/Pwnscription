@@ -47,12 +47,12 @@ async function run() {
 		type: "rawlist",
 		name: "selectedWordlist",
 		message: "Select a wordlist file:",
-		choices: ["base-word.txt", ...wordlistFiles, "NONE", "Exit"]
+		choices: ["base-word.txt", ...wordlistFiles, "Exit"]
 	}, {
 		type: "rawlist",
 		name: "selectedRules",
 		message: "Select a .rule file:",
-		choices: ["ALL", ...rulesFiles, "NONE", "Exit"]
+		choices: ["ALL", ...rulesFiles, "Exit"]
 	}]);
 
 	if (selectedWordlist === "Exit" || selectedRules === "Exit") {
