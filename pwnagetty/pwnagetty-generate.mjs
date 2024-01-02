@@ -50,8 +50,8 @@ const convertFile = async (file) => {
 
 		return "No PMKID or HCCAPX found.";
 	} catch (error) {
-		console.log(error);
-		throw error;
+		// console.error(`${error}`);
+		// console.error(`${error.stdout}`);
 	}
 };
 
