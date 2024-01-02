@@ -7,7 +7,7 @@ import sftpClient from "ssh2-sftp-client";
 import { Client as sshClient } from "ssh2";
 
 // Set the maximum number of listeners globally for all event emitters to unlimited.
-import events from 'events';
+import events from "events";
 events.EventEmitter.defaultMaxListeners = 0;
 
 const sshConfig = {
