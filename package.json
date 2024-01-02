@@ -9,7 +9,7 @@
 		"vagrant-destroy": "cd ./windows/vagrant && vagrant destroy -f",
 		"generate": "node ./pwnagetty/pwnagetty-generate.mjs",
 		"cli": "node ./utils/cli/cli.mjs",
-		"results": "node ./scripts/cracked-networks-results.js",
+		"results": "node ./scripts/cracked-networks-results.mjs",
 		"utils": "node ./utils/utils.mjs"
 	},
 	"repository": {

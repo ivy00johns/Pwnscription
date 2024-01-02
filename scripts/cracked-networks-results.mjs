@@ -1,32 +1,33 @@
-const fs = require("fs");
-const logos = require("../scripts/logos");
+#!/usr/bin/env node
+
+import fs from "fs";
+import logos from "./logos.js";
+import config from "../config.js";
 
 let networksCracked = [];
 
-// Check if a network has already been cracked based on its hash
-function hasNetworkAlreadyBeenCracked(resultHash) {
+// Check if a network has already been cracked based on its hash.
+const hasNetworkAlreadyBeenCracked = (resultHash) => {
 	return networksCracked.some(network => network[2].split(":")[0] === resultHash.split(":")[0]);
-}
+};
 
-// Detect cracked networks based on the existence of output.txt files
-async function detectCrackedNetworks() {
-	const hashcatDir = "./hashcat/outputs/";
-
+// Detect cracked networks based on the existence of output.txt files.
+const detectCrackedNetworks = async () => {
 	try {
-		// Read all files in the ./hashcat/outputs/ directory
-		const files = fs.readdirSync(hashcatDir);
+		// Read all files in the ./hashcat/outputs/ directory.
+		const files = fs.readdirSync(config.LOCAL_OUTPUT_FILE_DIRECTORY);
 
-		// Loop through each file
+		// Loop through each file.
 		for (const file of files) {
-			// Check if the file is an output.txt file
+			// Check if the file is an output.txt file.
 			if (file.endsWith("-output.txt")) {
 				// Read the contents of the file
-				const filePath = `${hashcatDir}${file}`;
+				const filePath = `${config.LOCAL_OUTPUT_FILE_DIRECTORY}/${file}`;
 				const content = fs.readFileSync(filePath, "utf8");
 
-				// Check if the content is not empty
+				// Check if the content is not empty.
 				if (content.trim() !== "") {
-					// Process the content (assuming it follows a specific format)
+					// Process the content (assuming it follows a specific format).
 					const parts = content.split(":");
 					if (parts.length >= 4) {
 						const resultHash = parts[parts.length - 4] + ":" + parts[parts.length - 3];
@@ -42,13 +43,12 @@ async function detectCrackedNetworks() {
 	} catch (error) {
 		console.error(`Error reading hashcat output: ${error.message}`);
 	}
-}
+};
 
 // Main function
-async function main() {
+const main = async () => {
 	await detectCrackedNetworks();
 	logos.printCrackedNetworks(networksCracked);
-}
+};
 
-// Run the script
 main();
