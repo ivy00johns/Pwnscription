@@ -60,34 +60,45 @@ const moveFiles = async () => {
 // Download all files from Pwnagotchi.
 //=====================================
 const getFiles = async () => {
-	const client = new sftpClient();
+    const client = new sftpClient();
 
-	// if "/pcap" doesn"t exist, create it.
-	if (!fs.existsSync(config.LOCAL_PCAP_DIRECTORY)) {
-		fs.mkdirSync(config.LOCAL_PCAP_DIRECTORY);
-	}
+    // if "/pcap" doesn't exist, create it.
+    if (!fs.existsSync(config.LOCAL_PCAP_DIRECTORY)) {
+        fs.mkdirSync(config.LOCAL_PCAP_DIRECTORY);
+    }
 
-	// connect to pwnagotchi and get files.
-	try {
-		await client.connect(sftpConfig);
-		console.log("Connecting to Pwnagotchi...\n");
+    // connect to pwnagotchi and get files.
+    try {
+        await client.connect(sftpConfig);
+        console.log("Connecting to Pwnagotchi...\n");
 
-		let count = 0;
-		client.on("download", (info) => {
-			count++;
-			process.stdout.write(`Downloaded ${count} captures...\r`);
-		});
+        let count = 0;
+        client.on("download", (info) => {
+            count++;
+            process.stdout.write(`Downloaded ${count} captures...\r`);
+        });
 
-		let result = await client.downloadDir(
-			config.PWNAGOTCHI_HANDSHAKES,
-			config.LOCAL_PCAP_DIRECTORY
-		);
-		console.log(`\n`);
-		return result;
-	} finally {
-		client.end();
-	}
+        const remoteDirExists = await client.exists(config.PWNAGOTCHI_HANDSHAKES);
+        if (remoteDirExists) {
+            let remoteFiles = await client.list(config.PWNAGOTCHI_HANDSHAKES);
+
+            console.log(`\nNumber of files on Pwnagotchi: ${remoteFiles.length}`);
+
+            for (let remoteFile of remoteFiles) {
+                if (remoteFile.name.endsWith('.pcap')) {
+                    await client.fastGet(`${config.PWNAGOTCHI_HANDSHAKES}/${remoteFile.name}`, `${config.LOCAL_PCAP_DIRECTORY}/${remoteFile.name}`);
+                }
+            }
+
+            console.log(`Number of files downloaded: ${count}\n`);
+        } else {
+            console.log(`Remote directory ${config.PWNAGOTCHI_HANDSHAKES} does not exist.`);
+        }
+    } finally {
+        client.end();
+    }
 };
+
 
 //===============
 // Main Process
