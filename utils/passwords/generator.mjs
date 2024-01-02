@@ -1,12 +1,12 @@
-const fs = require("fs");
-const config = require("../config");
+import fs from "fs";
+import config from "../config.js";
 
 // Function to generate combinations of a given array of words
-function generateCombinations(words) {
+const generateCombinations = (words) => {
 	const combinationsSet = new Set();
 
 	// Recursive function to generate combinations
-	function generate(currentCombination, remainingWords) {
+	const generate = (currentCombination, remainingWords) => {
 		if (remainingWords === 0) {
 			combinationsSet.add(currentCombination);
 			return;
@@ -18,7 +18,7 @@ function generateCombinations(words) {
 				generate(currentCombination + words[i], remainingWords - 1);
 			}
 		}
-	}
+	};
 
 	for (let k = 1; k <= config.MAX_WORDS_USED; k++) {
 		for (let i = 0; i < words.length; i++) {
@@ -27,7 +27,7 @@ function generateCombinations(words) {
 	}
 
 	return Array.from(combinationsSet);
-}
+};
 
 // Example usage with the provided list
 const initialWords = config.WORD_LIST;
