@@ -34,22 +34,24 @@ const moveFiles = async () => {
 		ls -a ${config.HANDSHAKE_DIRECTORY}
 	`;
 
-	ssh.setMaxListeners(100);
+	ssh.setMaxListeners(0);
 
 	ssh.on("ready", () => {
 		console.log("Connected to the Pwnagotchi.");
 
 		ssh.exec(commandToExecute, (err, stream) => {
-			if (err) throw err;
+			if (err)
+				throw err;
+
 			stream
 				.on("close", (code, signal) => {
 					console.log(`Command execution closed with code ${code}.`);
 					ssh.end();
 				})
-				.on("data", (data) => {
+				.on("data", data => {
 					console.log(`Command output:\n${data}`);
 				})
-				.stderr.on("data", (data) => {
+				.stderr.on("data", data => {
 					console.error(`Error output:\n${data}`);
 				});
 		});
@@ -60,45 +62,32 @@ const moveFiles = async () => {
 // Download all files from Pwnagotchi.
 //=====================================
 const getFiles = async () => {
-    const client = new sftpClient();
+	const client = new sftpClient();
 
-    // if "/pcap" doesn't exist, create it.
-    if (!fs.existsSync(config.LOCAL_PCAP_DIRECTORY)) {
-        fs.mkdirSync(config.LOCAL_PCAP_DIRECTORY);
-    }
+	// if "/pcap" doesn't exist, create it.
+	if (!fs.existsSync(config.LOCAL_PCAP_DIRECTORY)) {
+		fs.mkdirSync(config.LOCAL_PCAP_DIRECTORY);
+	}
 
-    // connect to pwnagotchi and get files.
-    try {
-        await client.connect(sftpConfig);
-        console.log("Connecting to Pwnagotchi...\n");
+	// connect to pwnagotchi and get files.
+	try {
+		await client.connect(sftpConfig);
+		console.log("Connecting to Pwnagotchi...\n");
 
-        let count = 0;
-        client.on("download", (info) => {
-            count++;
-            process.stdout.write(`Downloaded ${count} captures...\r`);
-        });
+		let count = 0;
+		client.on("download", info => {
+			count++;
+			process.stdout.write(`Downloaded ${count} captures...` + "\r");
+		});
 
-        const remoteDirExists = await client.exists(config.PWNAGOTCHI_HANDSHAKES);
-        if (remoteDirExists) {
-            let remoteFiles = await client.list(config.PWNAGOTCHI_HANDSHAKES);
+		let rslt = await client.downloadDir(config.PWNAGOTCHI_HANDSHAKES, config.LOCAL_PCAP_DIRECTORY);
+		console.log(`\n`);
 
-            console.log(`\nNumber of files on Pwnagotchi: ${remoteFiles.length}`);
-
-            for (let remoteFile of remoteFiles) {
-                if (remoteFile.name.endsWith('.pcap')) {
-                    await client.fastGet(`${config.PWNAGOTCHI_HANDSHAKES}/${remoteFile.name}`, `${config.LOCAL_PCAP_DIRECTORY}/${remoteFile.name}`);
-                }
-            }
-
-            console.log(`Number of files downloaded: ${count}\n`);
-        } else {
-            console.log(`Remote directory ${config.PWNAGOTCHI_HANDSHAKES} does not exist.`);
-        }
-    } finally {
-        client.end();
-    }
+		return rslt;
+	} finally {
+		client.end();
+	}
 };
-
 
 //===============
 // Main Process
