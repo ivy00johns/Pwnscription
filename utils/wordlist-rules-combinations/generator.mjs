@@ -27,9 +27,10 @@ const runCommand = async (wordlist, rulesFile) => {
 		const ruleFileName = path.basename(rulesFile).replace(/\.[^/.]+$/, "");
 		const outputFilePath = `../utils/wordlist-rules-combinations/results/${wordlistName}+${ruleFileName}.txt`;
 
-		execSync(`hashcat --stdout "${wordlist}" -r "${rulesFile}" > "${outputFilePath}"`, {
+		execSync(`hashcat --stdout "${wordlist}" -r "${rulesFile}" | grep -v -e "Cannot convert rule for use on OpenCL device" -e "Skipping invalid or unsupported rule in file" > "${outputFilePath}"`, {
 			stdio: "inherit"
 		});
+
 		console.log(chalk.green(`Output saved to: ${outputFilePath}`));
 	} catch (error) {
 		console.error(chalk.red(`Error running command: ${error.message}`));
