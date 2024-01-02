@@ -45,8 +45,8 @@ const convertFile = async (file) => {
 			successfulHCCAPXs++;
 		}
 	} catch (error) {
-		console.error(`${error}`);
-		console.error(`${error.stdout}`);
+		// console.error(`${error}`);
+		// console.error(`${error.stdout}`);
 	}
 };
 
