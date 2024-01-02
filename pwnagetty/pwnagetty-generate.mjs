@@ -34,24 +34,17 @@ const convertFile = async (file) => {
 		// Try converting to PMKID
 		const pmkidResult = await execPromisified(`hcxpcapngtool -o ${config.LOCAL_PMKID_DIRECTORY}/${file.replace(".pcap", "")}.pmkid ${config.LOCAL_PCAP_DIRECTORY}/${file}`);
 
-		if (pmkidResult.stdout.includes("processed cap files")) {
-			// console.log(`Found PMKID in ${file}.`);
+		if (pmkidResult.stdout.includes("EAPOL pairs written to 22000 hash file")) {
 			successfulPMKIDs++;
-			// `${file.replace(".pcap", "")}.pmkid`;
 		}
 
 		// If PMKID is not found, try converting to HCCAPX.
 		const hccapxResult = await execPromisified(`hcxpcapngtool -o ${config.LOCAL_HCCAPX_DIRECTORY}/${file.replace(".pcap", "")}.hc22000 ${config.LOCAL_PCAP_DIRECTORY}/${file}`);
 
-		if (hccapxResult.stdout.includes("processed cap files")) {
-			// console.log(`Found HCCAPX in ${file}.`);
+		if (hccapxResult.stdout.includes("EAPOL pairs written to 22000 hash file")) {
 			successfulHCCAPXs++;
-			// `${file.replace(".pcap", "")}.hc22000`;
 		}
-
-		// return "No PMKID or HCCAPX found.";
 	} catch (error) {
-		// Handle errors if needed.
 		console.error(`${error}`);
 		console.error(`${error.stdout}`);
 	}
@@ -88,8 +81,7 @@ const main = async () => {
 		for (let file of files) {
 			console.log(`Processing: ${file}`);
 
-			let result = await convertFile(file);
-			// console.log(`Results: ${result}`);
+			await convertFile(file);
 		}
 
 		let numFilesWithNoKeyMaterial = files.length - ((successfulHCCAPXs + successfulPMKIDs) / 2);
