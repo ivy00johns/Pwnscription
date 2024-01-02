@@ -25,33 +25,35 @@ const convertFile = async (file) => {
 	try {
 		// Exclude ".gitkeep" files.
 		if (file === ".gitkeep") {
-			console.log(`Skipping: ${file}`);
+			console.log(`Skipping: ${file}\n`);
 			return `${file} successfully skipped.`;
 		}
 
-		// We favour PMKID"s, if we find that we ignore handshakes, if no PMKID is found then we look for a handshake.
 		const execPromisified = util.promisify(exec);
+
+		// Try converting to PMKID
 		const pmkidResult = await execPromisified(`hcxpcapngtool -o ${config.LOCAL_PMKID_DIRECTORY}/${file.replace(".pcap", "")}.pmkid ${config.LOCAL_PCAP_DIRECTORY}/${file}`);
 
-		if (pmkidResult.stdout.includes("PMKID(s) written.")) {
-			console.log(`Found PMKID in ${file}.`);
+		if (pmkidResult.stdout.includes("processed cap files")) {
+			// console.log(`Found PMKID in ${file}.`);
 			successfulPMKIDs++;
-			return "pmkid";
+			// `${file.replace(".pcap", "")}.pmkid`;
 		}
 
 		// If PMKID is not found, try converting to HCCAPX.
 		const hccapxResult = await execPromisified(`hcxpcapngtool -o ${config.LOCAL_HCCAPX_DIRECTORY}/${file.replace(".pcap", "")}.hc22000 ${config.LOCAL_PCAP_DIRECTORY}/${file}`);
 
-		if (hccapxResult.stdout.includes("Handshake(s) written.")) {
-			console.log(`Found HCCAPX in ${file}.`);
+		if (hccapxResult.stdout.includes("processed cap files")) {
+			// console.log(`Found HCCAPX in ${file}.`);
 			successfulHCCAPXs++;
-			return "hccapx";
+			// `${file.replace(".pcap", "")}.hc22000`;
 		}
 
-		return "No PMKID or HCCAPX found.";
+		// return "No PMKID or HCCAPX found.";
 	} catch (error) {
-		// console.error(`${error}`);
-		// console.error(`${error.stdout}`);
+		// Handle errors if needed.
+		console.error(`${error}`);
+		console.error(`${error.stdout}`);
 	}
 };
 
@@ -84,19 +86,19 @@ const main = async () => {
 
 		// Loop over all pcap files.
 		for (let file of files) {
-			console.log(`\nProcessing: ${file}`);
+			console.log(`Processing: ${file}`);
 
 			let result = await convertFile(file);
-			console.log(`Results: ${result}`);
+			// console.log(`Results: ${result}`);
 		}
 
-		let numFilesWithNoKeyMaterial = files.length - (successfulHCCAPXs + successfulPMKIDs);
+		let numFilesWithNoKeyMaterial = files.length - ((successfulHCCAPXs + successfulPMKIDs) / 2);
 		let percentFilesWithNoKeyMaterial = Math.round(((numFilesWithNoKeyMaterial * 100) / files.length) * 100) / 100;
 
 		console.log(`\n${files.length} total PCAP files found.`);
-		console.log(`${successfulPMKIDs} successful PMKIDs found.`);
-		console.log(`${successfulHCCAPXs} successful HCCAPXs found.\n`);
-		console.log(`${numFilesWithNoKeyMaterial} files (${percentFilesWithNoKeyMaterial}%) did not have key material.\n\n`);
+		console.log(`${successfulPMKIDs} PMKIDs successfully created.`);
+		console.log(`${successfulHCCAPXs} HCCAPXs successfully created.\n`);
+		console.log(`${numFilesWithNoKeyMaterial} files (${percentFilesWithNoKeyMaterial}%) did not have key material.`);
 
 		process.exit(0);
 	} catch (err) {
