@@ -2,9 +2,9 @@
 
 import fs from "fs";
 import config from "../config.js";
-import logos from "../scripts/logos.js";
 import sftpClient from "ssh2-sftp-client";
 import { Client as sshClient } from "ssh2";
+import * as logos from "../scripts/logos.mjs";
 
 // Set the maximum number of listeners globally for all event emitters to unlimited.
 import events from "events";

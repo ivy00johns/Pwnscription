@@ -4,7 +4,7 @@ import util from "util";
 import fs from "fs/promises";
 import config from "../config.js";
 import { exec } from "child_process";
-import logos from "../scripts/logos.js";
+import * as logos from "../scripts/logos.mjs";
 
 let successfulPMKIDs  = 0;
 let successfulHCCAPXs = 0;

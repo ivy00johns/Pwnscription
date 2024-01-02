@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 import fs from "fs";
-import logos from "./logos.js";
 import config from "../config.js";
+import * as logos from "../scripts/logos.mjs";
 
 let networksCracked = [];
 
