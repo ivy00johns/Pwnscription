@@ -12,73 +12,70 @@ const __dirname  = dirname(__filename);
 // Set the project directory
 const projectDirectory = __dirname;
 
-function readFile(filePath) {
+const readFile = filePath => {
 	try {
-		return fs.readFileSync(filePath, "utf8").split(/[\s,]+/).filter((v, i, a) => a.indexOf(v) === i).filter(function(e) {
-			return e === 0 || e;
-		});
+		return fs.readFileSync(filePath, "utf8").split(/[\s,]+/).filter((v, i, a) => a.indexOf(v) === i).filter(e => e === 0 || e);
 	} catch (error) {
 		console.error(`Error reading file ${filePath}: ${error.message}`);
 		process.exit(1);
 	}
-}
+};
 
-function readMasks(filePath) {
+const readMasks = filePath => {
 	try {
-		return fs
-			.readFileSync(filePath, "utf8")
-			.split("\n")
-			.map(line => line.trim())
-			.filter(line => line !== "");
+		return fs.readFileSync(filePath, "utf8").split("\n").map(line => line.trim()).filter(line => line !== "");
 	} catch (error) {
 		console.error(`Error reading file ${filePath}: ${error.message}`);
 		process.exit(1);
 	}
-}
+};
 
-function applyMask(string, mask) {
-	if (typeof mask !== 'string') {
+const applyMask = (string, mask) => {
+	if (typeof mask !== "string") {
 		console.error(`Invalid mask: ${mask}`);
 		return string;
 	}
 
-	// Repeat the mask until it matches or exceeds the length of the input string
 	const repeatedMask = mask.repeat(Math.ceil(string.length / mask.length));
-
-	// Use slice to ensure the mask length matches the input string length
 	const adjustedMask = repeatedMask.slice(0, string.length);
 
-	return string.split("").map((char, index) => (adjustedMask.charAt(index) === "?" ? char : adjustedMask.charAt(index))).join("");
-}
-
-function generate(data, masks) {
-	const list = new Set();
-	for (let string of data) {
-		for (let mask of masks) {
-			const maskResult = applyMask(string, mask);
-			list.add(maskResult);
-		}
+	try {
+		return string.split("").map((char, index) => (adjustedMask.charAt(index) === "?" ? char : adjustedMask.charAt(index))).join("");
+	} catch (error) {
+		console.error(`Error applying mask "${mask}" to string "${string}": ${error.message}`);
+		return string;
 	}
+};
 
-	const result = Array.from(list).join("\n"); // Join the array elements into a string
-	return result;
-}
+const generate = (data, masks) => {
+    const resultArray = [];
 
-async function generateAndSave() {
-	const exclusions    = [".gitkeep", ".gz"];
+    for (let string of data) {
+        for (let mask of masks) {
+            const maskResult = applyMask(string, mask);
+
+            // Check for uniqueness
+            if (!resultArray.includes(maskResult)) {
+                resultArray.push(maskResult);
+            }
+        }
+    }
+
+    return resultArray.join("\n");
+};
+
+const generateAndSave = async () => {
+	const exclusions = [".gitkeep", ".gz"];
 	const wordlistFiles = fs.readdirSync(config.LOCAL_WORLISTS_DIRECTORY).filter(file => exclusions.every(exclusion => !file.includes(exclusion)));
-	const maskFiles     = fs.readdirSync(config.LOCAL_MASKS_DIRECTORY).filter(file => exclusions.every(exclusion => !file.includes(exclusion)));
+	const maskFiles = fs.readdirSync(config.LOCAL_MASKS_DIRECTORY).filter(file => exclusions.every(exclusion => !file.includes(exclusion)));
 
-	const {
-		selectedWordlist,
-		selectedMask
-	} = await inquirer.prompt([{
+	const { selectedWordlist, selectedMask } = await inquirer.prompt([
+		{
 			type: "rawlist",
 			name: "selectedTxtFile",
 			message: "Select a .txt file:",
 			choices: ["base-word.txt", ...wordlistFiles, "Exit"]
-		},
-		{
+		}, {
 			type: "rawlist",
 			name: "selectedMaskFile",
 			message: "Select a mask file:",
@@ -109,6 +106,6 @@ async function generateAndSave() {
 			}
 		}
 	}
-}
+};
 
 generateAndSave();
