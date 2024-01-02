@@ -37,31 +37,31 @@ function readMasks(filePath) {
 }
 
 function applyMask(string, mask) {
-    if (typeof mask !== 'string') {
-        console.error(`Invalid mask: ${mask}`);
-        return string;
-    }
+	if (typeof mask !== 'string') {
+		console.error(`Invalid mask: ${mask}`);
+		return string;
+	}
 
-    // Repeat the mask until it matches or exceeds the length of the input string
-    const repeatedMask = mask.repeat(Math.ceil(string.length / mask.length));
+	// Repeat the mask until it matches or exceeds the length of the input string
+	const repeatedMask = mask.repeat(Math.ceil(string.length / mask.length));
 
-    // Use slice to ensure the mask length matches the input string length
-    const adjustedMask = repeatedMask.slice(0, string.length);
+	// Use slice to ensure the mask length matches the input string length
+	const adjustedMask = repeatedMask.slice(0, string.length);
 
-    return string.split("").map((char, index) => (adjustedMask.charAt(index) === "?" ? char : adjustedMask.charAt(index))).join("");
+	return string.split("").map((char, index) => (adjustedMask.charAt(index) === "?" ? char : adjustedMask.charAt(index))).join("");
 }
 
 function generate(data, masks) {
-    const list = new Set();
-    for (let string of data) {
-        for (let mask of masks) {
-            const maskResult = applyMask(string, mask);
-            list.add(maskResult);
-        }
-    }
+	const list = new Set();
+	for (let string of data) {
+		for (let mask of masks) {
+			const maskResult = applyMask(string, mask);
+			list.add(maskResult);
+		}
+	}
 
-    const result = Array.from(list).join("\n"); // Join the array elements into a string
-    return result;
+	const result = Array.from(list).join("\n"); // Join the array elements into a string
+	return result;
 }
 
 async function generateAndSave() {
@@ -83,7 +83,7 @@ async function generateAndSave() {
 			name: "selectedMaskFile",
 			message: "Select a mask file:",
 			choices: ["ALL", ...maskFiles, "Exit"]
-		},
+		}
 	]);
 
 	if (selectedWordlist === "Exit" || selectedMask === "Exit") {
