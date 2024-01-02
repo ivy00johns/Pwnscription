@@ -4,7 +4,7 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"get": "node ./pwnagetty/pwnagetty-get-pcaps.js",
+		"get": "node ./pwnagetty/pwnagetty-get-pcaps.mjs",
 		"vagrant-up": "cd ./windows/vagrant && vagrant up --provision",
 		"vagrant-destroy": "cd ./windows/vagrant && vagrant destroy -f",
 		"generate": "node ./pwnagetty/pwnagetty-generate.mjs",
