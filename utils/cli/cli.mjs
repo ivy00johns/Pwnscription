@@ -1,13 +1,15 @@
-import chalk from "chalk";
-import inquirer from "inquirer";
-import CLI from "clui";
+#!/usr/bin/env node
+
 import fs from "fs";
-import { execSync } from "child_process";
+import CLI from "clui";
+import chalk from "chalk";
+import * as path from "path";
+import { dirname } from "path";
+import inquirer from "inquirer";
 import clipboardy from "clipboardy";
 import { fileURLToPath } from "url";
-import { dirname } from "path";
-import * as path from "path";
 import config from "../../config.js";
+import { execSync } from "child_process";
 
 // Get the current file and directory names
 const __filename = fileURLToPath(import.meta.url);

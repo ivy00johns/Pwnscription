@@ -1,16 +1,18 @@
-import chalk from "chalk";
-import inquirer from "inquirer";
-import CLI from "clui";
+#!/usr/bin/env node
+
 import fs from "fs";
-import { execSync } from "child_process";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
+import CLI from "clui";
+import chalk from "chalk";
 import * as path from "path";
+import { dirname } from "path";
+import inquirer from "inquirer";
 import config from "../config.js";
+import { fileURLToPath } from "url";
+import { execSync } from "child_process";
 
 // Get the current file and directory names
 const __filename = fileURLToPath(import.meta.url);
-const __dirname  = dirname(__filename);
+const __dirname = dirname(__filename);
 
 // Set the project directory
 const projectDirectory = __dirname;
@@ -19,7 +21,7 @@ const projectDirectory = __dirname;
 const Spinner = CLI.Spinner;
 
 // Function to run a command using npm
-async function runCommand(wordlist, rulesFile) {
+const runCommand = async (wordlist, rulesFile) => {
 	try {
 		const wordlistName = path.basename(wordlist).replace(/\.[^/.]+$/, "");
 		const ruleFileName = path.basename(rulesFile).replace(/\.[^/.]+$/, "");
@@ -32,13 +34,13 @@ async function runCommand(wordlist, rulesFile) {
 	} catch (error) {
 		console.error(chalk.red(`Error running command: ${error.message}`));
 	}
-}
+};
 
 // Main function to handle user input and execute commands
-async function run() {
-	const exclusions    = [".gitkeep", ".gz"];
+const run = async () => {
+	const exclusions = [".gitkeep", ".gz"];
 	const wordlistFiles = fs.readdirSync(config.LOCAL_WORLISTS_DIRECTORY).filter(file => exclusions.every(exclusion => !file.includes(exclusion)));
-	const rulesFiles    = fs.readdirSync(config.LOCAL_RULES_DIRECTORY).filter(file => exclusions.every(exclusion => !file.includes(exclusion)));
+	const rulesFiles = fs.readdirSync(config.LOCAL_RULES_DIRECTORY).filter(file => exclusions.every(exclusion => !file.includes(exclusion)));
 
 	const {
 		selectedWordlist,
@@ -90,13 +92,13 @@ async function run() {
 			}, 500);
 		}
 	}
-}
+};
 
 // Helper function to get the wordlist path based on the selection
-function getWordlistPath(selectedWordlist) {
+const getWordlistPath = (selectedWordlist) => {
 	return selectedWordlist === "base-word.txt"
 		? path.join(projectDirectory, "..", selectedWordlist)
 		: path.join(projectDirectory, "..", config.LOCAL_WORLISTS_DIRECTORY, selectedWordlist);
-}
+};
 
 run();
