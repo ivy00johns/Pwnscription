@@ -647,3 +647,4 @@ Stopped: Sun Nov 12 20:02:49 2023
 - [ ] Find better names for the functions and commands.
 - [ ] Add Flipper Zero notes.
 - [ ] Add Flipper Zero support.
+- [ ] Modernize everything. There is a mixture of syntaxes.

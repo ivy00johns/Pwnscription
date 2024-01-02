@@ -1,16 +1,9 @@
 #!/usr/bin/env node
 const fs = require("fs");
-const path = require("path");
 const util = require("util");
+const config = require("../config");
 const { exec } = require("child_process");
 const logos = require("../scripts/logos");
-
-//====================================
-// Configuration 
-//====================================
-const config = {
-	localDir: "./handshakes/pcap"
-};
 
 let successfulPMKIDs = 0;
 let successfulHCCAPXs = 0;
@@ -20,7 +13,7 @@ let successfulHCCAPXs = 0;
 //=================================
 async function readDir() {
 	return new Promise((resolve, reject) => {
-		fs.readdir(config.localDir, function (err, files) {
+		fs.readdir(config.LOCAL_PCAP_DIRECTORY, function (err, files) {
 			if (err) {
 				reject(`Unable to scan directory: ${err}`);
 			}
@@ -39,7 +32,7 @@ async function convertFile(file) {
 		}
 
 		// We favour PMKID's, if we find that we ignore handshakes, if no PMKID is found then we look for a handshake.
-		util.promisify(exec)(`hcxpcapngtool -o ./handshakes/pmkid/${file.replace(".pcap", "")}.pmkid ${config.localDir}/${file}`, function (error, stdout) {
+		util.promisify(exec)(`hcxpcapngtool -o ${config.LOCAL_PMKID_DIRECTORY}/${file.replace(".pcap", "")}.pmkid ${config.LOCAL_PCAP_DIRECTORY}/${file}`, function (error, stdout) {
 			if (error) {
 				reject(error); // Reject the promise on error
 			}
@@ -50,7 +43,7 @@ async function convertFile(file) {
 				resolve("pmkid");
 			} else {
 				// If PMKID is not found, try converting to HCCAPX
-				util.promisify(exec)(`hcxpcapngtool -o ./handshakes/hccapx/${file.replace(".pcap", "")}.hc22000 ${config.localDir}/${file}`, function (error, stdout) {
+				util.promisify(exec)(`hcxpcapngtool -o ${config.LOCAL_HCCAPX_DIRECTORY}/${file.replace(".pcap", "")}.hc22000 ${config.LOCAL_PCAP_DIRECTORY}/${file}`, function (error, stdout) {
 					if (error) {
 						reject(error); // Reject the promise on error
 						console.log(error);
@@ -79,13 +72,13 @@ async function main() {
 		let files  = await readDir();
 		
 		// if "/pmkid" doesn"t exist, create it.
-		if (!fs.existsSync("./handshakes/pmkid")) {
-			fs.mkdirSync("./handshakes/pmkid", { recursive: true });
+		if (!fs.existsSync(config.LOCAL_PMKID_DIRECTORY)) {
+			fs.mkdirSync(config.LOCAL_PMKID_DIRECTORY, { recursive: true });
 		}
 
 		// if "/hccapx" doesn"t exist, create it.
-		if (!fs.existsSync("./handshakes/hccapx")) {
-			fs.mkdirSync("./handshakes/hccapx", { recursive: true });
+		if (!fs.existsSync(config.LOCAL_HCCAPX_DIRECTORY)) {
+			fs.mkdirSync(config.LOCAL_HCCAPX_DIRECTORY, { recursive: true });
 		}
 
 		// Loop over all pcap files
