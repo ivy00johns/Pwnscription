@@ -628,3 +628,5 @@ Stopped: Sun Nov 12 20:02:49 2023
 - [ ] Add Flipper Zero support.
 - [ ] Modernize everything. There is a mixture of syntaxes.
 - [ ] Move common functions to a single file.
+- [ ] Add hash generation logic.
+- [ ] Add logic to enter password hints via the CLI, with the ability to save a custom config file.
