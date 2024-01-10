@@ -112,15 +112,11 @@ const filteredResult = sortedResult.filter((combo) => {
 	);
 });
 
-// Print count of unique combinations generated in the terminal
-console.log(
-	`Generated ${filteredResult.length} unique combinations.`
-);
-
 // Print specified number of items in the terminal
 const itemsToPrint = Math.min(config.PRINT_ITEMS, filteredResult.length);
 console.log(`Printing ${itemsToPrint} items:`);
 console.log(filteredResult.slice(0, itemsToPrint));
+console.log(`Generated ${filteredResult.length} unique combinations.`);
 
 // Write the specified number of combinations to a file
 const combinationsToGenerate = config.GENERATE_PERMUTATIONS;
