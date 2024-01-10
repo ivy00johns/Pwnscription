@@ -1,6 +1,6 @@
 module.exports = {
 	// General configurations
-	PRINT_ITEMS: 10, // Number of items to print in the terminal
+	PRINT_ITEMS: 5, // Number of items to print in the terminal
 	GENERATE_PERMUTATIONS: 2000, // Number of permutations to generate and add to the .txt file
 	EXPORT_FILE_NAME: "./hashcat/wordlists/generated-passwords.txt", // Name of the exported file
 	WORD_LIST: [], // List of words for generation
