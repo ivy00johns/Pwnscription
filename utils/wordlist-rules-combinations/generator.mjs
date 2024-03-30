@@ -2,8 +2,8 @@
 
 import fs from "fs";
 import CLI from "clui";
+import path from "path";
 import chalk from "chalk";
-import * as path from "path";
 import { dirname } from "path";
 import inquirer from "inquirer";
 import config from "../config.js";
@@ -13,36 +13,23 @@ import mainConfigs from "../../config.js";
 
 // Get the current file and directory names
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-// Set the project directory
-const projectDirectory = __dirname;
+const __dirname  = dirname(__filename);
 
 // CLI components
 const Spinner = CLI.Spinner;
 
 // Hashcat command path
-let hashcat;
+const hashcatCommand = mainConfigs.WINDOWS ? `cd ${mainConfigs.HASHCAT_PATH} ; hashcat` : "hashcat";
 
-if (mainConfigs.WINDOWS) {
-	hashcat = `cd ${mainConfigs.HASHCAT_PATH} ; hashcat`;
-} else {
-	hashcat = "hashcat";
-}
-
-// Function to run a command using npm
-const runCommand = async (wordlist, rulesFile) => {
+// Function to execute a command using npm
+const executeCommand = async (wordlistPath, rulesFilePath) => {
 	try {
-		const wordlistName   = path.basename(wordlist).replace(/\.[^/.]+$/, "");
-		const ruleFileName   = path.basename(rulesFile).replace(/\.[^/.]+$/, "");
+		const wordlistName = path.basename(wordlistPath, path.extname(wordlistPath));
+		const ruleFileName = path.basename(rulesFilePath, path.extname(rulesFilePath));
 		const outputFilePath = `./wordlist-rules-combinations/results/${wordlistName}+${ruleFileName}.txt`;
-		let command;
-
-		if (mainConfigs.WINDOWS) {
-			command = `${hashcat} --stdout "${wordlist}" -r "${rulesFile}" | findstr /V /C:"Cannot convert rule for use on OpenCL device" /C:"Skipping invalid or unsupported rule in file" > "${outputFilePath}"`;
-		} else {
-			command = `${hashcat} --stdout "${wordlist}" -r "${rulesFile}" | grep -v -e "Cannot convert rule for use on OpenCL device" -e "Skipping invalid or unsupported rule in file" > "${outputFilePath}"`;
-		}
+		const command = mainConfigs.WINDOWS
+			? `${hashcatCommand} --stdout "${wordlistPath}" -r "${rulesFilePath}" | findstr /V /C:"Cannot convert rule for use on OpenCL device" /C:"Skipping invalid or unsupported rule in file" > "${outputFilePath}"`
+			: `${hashcatCommand} --stdout "${wordlistPath}" -r "${rulesFilePath}" | grep -v -e "Cannot convert rule for use on OpenCL device" -e "Skipping invalid or unsupported rule in file" > "${outputFilePath}"`;
 
 		console.log(command);
 		execSync(command, { stdio: "inherit" });
@@ -51,6 +38,14 @@ const runCommand = async (wordlist, rulesFile) => {
 	} catch (error) {
 		console.error(chalk.red(`Error running command: ${error.message}`));
 	}
+};
+
+// Function to get the wordlist path based on the selection
+const getWordlistPath = (selectedWordlist) => {
+	const currentDir = new URL('.', import.meta.url).pathname;
+	return selectedWordlist === "base-word.txt"
+		? path.join(currentDir, "..", selectedWordlist)
+		: path.join(currentDir, "..", config.LOCAL_WORLISTS_DIRECTORY, selectedWordlist);
 };
 
 // Main function to handle user input and execute commands
@@ -79,43 +74,32 @@ const run = async () => {
 		process.exit(0);
 	}
 
-	if (selectedWordlist !== "Exit" || selectedRules !== "Exit") {
-		if (selectedRules === "ALL") {
-			// Process all .rule files in the directory
-			rulesFiles.forEach(async (ruleFile) => {
-				const wordlistPath = getWordlistPath(selectedWordlist);
-				const rulePath = path.join(projectDirectory, "..", config.LOCAL_RULES_DIRECTORY, ruleFile);
+	const wordlistPath = getWordlistPath(selectedWordlist);
 
-				const status = new Spinner(`Processing ${ruleFile}...`);
-				status.start();
-
-				await runCommand(wordlistPath, rulePath);
-
-				status.stop();
-			});
-		} else {
-			const wordlistPath = getWordlistPath(selectedWordlist);
-			const rulePath = path.join(projectDirectory, "..", config.LOCAL_RULES_DIRECTORY, selectedRules);
-
-			const status = new Spinner("Processing...");
+	if (selectedRules === "ALL") {
+		// Process all .rule files in the directory
+		for (const ruleFile of rulesFiles) {
+			const rulePath = path.join(__dirname, "..", config.LOCAL_RULES_DIRECTORY, ruleFile);
+			const status = new Spinner(`Processing ${ruleFile}...`);
 			status.start();
 
-			// Simulate an asynchronous operation
-			setTimeout(() => {
-				status.stop();
+			await executeCommand(wordlistPath, rulePath);
 
-				// Run the selected command
-				runCommand(wordlistPath, rulePath);
-			}, 500);
+			status.stop();
 		}
-	}
-};
+	} else {
+		const rulePath = path.join(__dirname, "..", config.LOCAL_RULES_DIRECTORY, selectedRules);
+		const status = new Spinner("Processing...");
+		status.start();
 
-// Helper function to get the wordlist path based on the selection
-const getWordlistPath = (selectedWordlist) => {
-	return selectedWordlist === "base-word.txt"
-		? path.join(projectDirectory, "..", selectedWordlist)
-		: path.join(projectDirectory, "..", config.LOCAL_WORLISTS_DIRECTORY, selectedWordlist);
+		// Simulate an asynchronous operation
+		setTimeout(async () => {
+			status.stop();
+
+			// Run the selected command
+			await executeCommand(wordlistPath, rulePath);
+		}, 500);
+	}
 };
 
 run();
