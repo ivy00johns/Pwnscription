@@ -31,10 +31,12 @@ const executeCommand = async (wordlistPath, rulesFilePath) => {
 			? `${hashcatCommand} --stdout "${wordlistPath}" -r "${rulesFilePath}" | findstr /V /C:"Cannot convert rule for use on OpenCL device" /C:"Skipping invalid or unsupported rule in file" > "${outputFilePath}"`
 			: `${hashcatCommand} --stdout "${wordlistPath}" -r "${rulesFilePath}" | grep -v -e "Cannot convert rule for use on OpenCL device" -e "Skipping invalid or unsupported rule in file" > "${outputFilePath}"`;
 
-		console.log(command);
 		execSync(command, { stdio: "inherit" });
 
-		console.log(chalk.green(`Output saved to: ${outputFilePath}`));
+		// Count the number of lines in the output file
+		const exportedCombinations = fs.readFileSync(outputFilePath, 'utf-8').split('\n').length - 1;
+
+		console.log(chalk.green(`Output saved to: ${outputFilePath}.\n    Number of combinations exported: ${exportedCombinations}`));
 	} catch (error) {
 		console.error(chalk.red(`Error running command: ${error.message}`));
 	}
