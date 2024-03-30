@@ -7,12 +7,27 @@ import config from "../config.js";
 
 let allCombinations = [];
 
+// Function to check if a file exists
+const fileExists = async (filePath) => {
+	try {
+		await fs.promises.access(filePath);
+		return true;
+	} catch {
+		return false;
+	}
+};
+
 // Prompt user to select generation process
+const choices = [".config.js", "manual", "Exit"];
+if (await fileExists(config.DEFAULT_CUSTOM_WORDLIST_FILENAME)) {
+	choices.splice(1, 0, config.DEFAULT_CUSTOM_WORDLIST_FILENAME);
+}
+
 const { selectedAction } = await inquirer.prompt([{
 	type: "list",
 	name: "selectedAction",
 	message: "Select generation process:",
-	choices: [".config.js", "manual", "Exit"]
+	choices
 }]);
 
 // Function to generate combinations of a given array of words
@@ -69,6 +84,28 @@ const inputWords = async () => {
 	console.log("Entered words:", wordsArray);
 
 	allCombinations = generateCombinations(wordsArray);
+
+	// Ask the user if they want to save the file
+	const { saveFile } = await inquirer.prompt({
+		type: "confirm",
+		name: "saveFile",
+		message: "Do you want to save the words to a file?",
+		default: true
+	});
+
+	if (saveFile) {
+		// Ask the user for the file name
+		const { fileName } = await inquirer.prompt({
+			type: "input",
+			name: "fileName",
+			message: "Enter the file name:",
+			default: config.DEFAULT_CUSTOM_WORDLIST_FILENAME
+		});
+
+		// Save the manually entered words to a custom file
+		fs.writeFileSync(`${fileName}`, `module.exports = {\n\tWORD_LIST: ${JSON.stringify(wordsArray)}\n};`);
+		console.log(`Manually entered words written to ${fileName}.`);
+	}
 };
 
 if (selectedAction === ".config.js") {
@@ -77,6 +114,15 @@ if (selectedAction === ".config.js") {
 	await inputWords().catch((error) => {
 		console.error("Error:", error);
 	});
+} else if (selectedAction === config.DEFAULT_CUSTOM_WORDLIST_FILENAME) {
+	const customConfig = await import(`../${config.DEFAULT_CUSTOM_WORDLIST_FILENAME}`);
+	console.log("customConfig:", customConfig);
+	console.log("customConfig.default.WORD_LIST:", customConfig.default.WORD_LIST);
+	if (customConfig.default && customConfig.default.WORD_LIST) {
+		allCombinations = generateCombinations(customConfig.default.WORD_LIST);
+	} else {
+		console.error(`Error: WORD_LIST not found in ${config.DEFAULT_CUSTOM_WORDLIST_FILENAME}`);
+	}
 } else if (selectedAction === "Exit") {
 	console.log(chalk.yellow("Goodbye!"));
 	process.exit(0);

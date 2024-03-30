@@ -9,6 +9,7 @@ import inquirer from "inquirer";
 import config from "../config.js";
 import { fileURLToPath } from "url";
 import { execSync } from "child_process";
+import mainConfigs from "../../config.js";
 
 // Get the current file and directory names
 const __filename = fileURLToPath(import.meta.url);
@@ -20,16 +21,31 @@ const projectDirectory = __dirname;
 // CLI components
 const Spinner = CLI.Spinner;
 
+// Hashcat command path
+let hashcat;
+
+if (mainConfigs.WINDOWS) {
+	hashcat = `cd ${mainConfigs.HASHCAT_PATH} ; hashcat`;
+} else {
+	hashcat = "hashcat";
+}
+
 // Function to run a command using npm
 const runCommand = async (wordlist, rulesFile) => {
 	try {
-		const wordlistName = path.basename(wordlist).replace(/\.[^/.]+$/, "");
-		const ruleFileName = path.basename(rulesFile).replace(/\.[^/.]+$/, "");
-		const outputFilePath = `../utils/wordlist-rules-combinations/results/${wordlistName}+${ruleFileName}.txt`;
+		const wordlistName   = path.basename(wordlist).replace(/\.[^/.]+$/, "");
+		const ruleFileName   = path.basename(rulesFile).replace(/\.[^/.]+$/, "");
+		const outputFilePath = `./wordlist-rules-combinations/results/${wordlistName}+${ruleFileName}.txt`;
+		let command;
 
-		execSync(`hashcat --stdout "${wordlist}" -r "${rulesFile}" | grep -v -e "Cannot convert rule for use on OpenCL device" -e "Skipping invalid or unsupported rule in file" > "${outputFilePath}"`, {
-			stdio: "inherit"
-		});
+		if (mainConfigs.WINDOWS) {
+			command = `${hashcat} --stdout "${wordlist}" -r "${rulesFile}" | findstr /V /C:"Cannot convert rule for use on OpenCL device" /C:"Skipping invalid or unsupported rule in file" > "${outputFilePath}"`;
+		} else {
+			command = `${hashcat} --stdout "${wordlist}" -r "${rulesFile}" | grep -v -e "Cannot convert rule for use on OpenCL device" -e "Skipping invalid or unsupported rule in file" > "${outputFilePath}"`;
+		}
+
+		console.log(command);
+		execSync(command, { stdio: "inherit" });
 
 		console.log(chalk.green(`Output saved to: ${outputFilePath}`));
 	} catch (error) {
