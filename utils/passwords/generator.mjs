@@ -5,90 +5,85 @@ import chalk from "chalk";
 import inquirer from "inquirer";
 import config from "../config.js";
 
-let result = [];
+let allCombinations = [];
 
-const {
-	action
-} = await inquirer.prompt([{
+// Prompt user to select generation process
+const { selectedAction } = await inquirer.prompt([{
 	type: "list",
-	name: "action",
+	name: "selectedAction",
 	message: "Select generation process:",
 	choices: [".config.js", "manual", "Exit"]
 }]);
 
 // Function to generate combinations of a given array of words
 const generateCombinations = (words) => {
-	const combinationsSet = new Set();
+	const combinations = new Set();
 
 	// Recursive function to generate combinations
-	const generate = (currentCombination, remainingWords) => {
+	const generateCombo = (currentCombo, remainingWords) => {
 		if (remainingWords === 0) {
-			combinationsSet.add(currentCombination);
+			combinations.add(currentCombo);
 			return;
 		}
 
 		for (let i = 0; i < words.length; i++) {
 			// Avoid combining the same word with itself or repeating within the combination
-			if (
-				currentCombination !== words[i] &&
-				!currentCombination.includes(words[i])
-			) {
-				generate(currentCombination + words[i], remainingWords - 1);
+			if (!currentCombo.includes(words[i])) {
+				generateCombo(currentCombo + words[i], remainingWords - 1);
 			}
 		}
 	};
 
 	for (let k = 1; k <= config.MAX_WORDS_USED; k++) {
 		for (let i = 0; i < words.length; i++) {
-			generate(words[i], k - 1);
+			generateCombo(words[i], k - 1);
 		}
 	}
 
-	return Array.from(combinationsSet);
+	return Array.from(combinations);
 };
 
 // Function to add a word to the array
-const addWord = async () => {
-	const response = await inquirer.prompt({
+const addWordToArray = async () => {
+	const { word } = await inquirer.prompt({
 		type: "input",
 		message: "Enter a word (press enter to finish):",
 		name: "word",
 	});
-	return response.word.trim(); // Trim to remove leading/trailing spaces
+	return word.trim(); // Trim to remove leading/trailing spaces
 };
 
 // Function to start the input process
-const enterWords = async () => {
-	const enteredWords = [];
+const inputWords = async () => {
+	const wordsArray = [];
 
 	while (true) {
-		const word = await addWord();
+		const word = await addWordToArray();
 		if (!word) {
 			break;
 		}
 
-		enteredWords.push(word);
-		// console.log(`Word "${word}" added.`);
+		wordsArray.push(word);
 	}
 
-	console.log("Entered words:", enteredWords);
+	console.log("Entered words:", wordsArray);
 
-	result = generateCombinations(enteredWords);
+	allCombinations = generateCombinations(wordsArray);
 };
 
-if (action === ".config.js") {
-	result = generateCombinations(config.WORD_LIST);
-} else if (action === "manual") {
-	await enterWords().catch((error) => {
+if (selectedAction === ".config.js") {
+	allCombinations = generateCombinations(config.WORD_LIST);
+} else if (selectedAction === "manual") {
+	await inputWords().catch((error) => {
 		console.error("Error:", error);
 	});
-} else if (action === "Exit") {
+} else if (selectedAction === "Exit") {
 	console.log(chalk.yellow("Goodbye!"));
 	process.exit(0);
 }
 
 // Custom sorting function based on config variables
-const customSort = (a, b) => {
+const sortCombinations = (a, b) => {
 	if (config.SORT_BY_LENGTH) {
 		if (a.length !== b.length) {
 			return config.SORT_LENGTH_ASCENDING ?
@@ -101,10 +96,10 @@ const customSort = (a, b) => {
 };
 
 // Sort combinations using the custom sorting function
-const sortedResult = result.sort(customSort);
+const sortedCombinations = allCombinations.sort(sortCombinations);
 
 // Filter combinations based on config variables for min/max length
-const filteredResult = sortedResult.filter((combo) => {
+const filteredCombinations = sortedCombinations.filter((combo) => {
 	const length = combo.length;
 	return (
 		(!config.MIN_LENGTH || length >= config.MIN_LENGTH) &&
@@ -113,16 +108,18 @@ const filteredResult = sortedResult.filter((combo) => {
 });
 
 // Print specified number of items in the terminal
-const itemsToPrint = Math.min(config.PRINT_ITEMS, filteredResult.length);
+const itemsToPrint = Math.min(config.PRINT_ITEMS, filteredCombinations.length);
 console.log(`Printing ${itemsToPrint} items:`);
-console.log(filteredResult.slice(0, itemsToPrint));
-console.log(`Generated ${filteredResult.length} unique combinations.`);
+console.log(filteredCombinations.slice(0, itemsToPrint));
+console.log(`Generated ${filteredCombinations.length} unique combinations.`);
 
 // Write the specified number of combinations to a file
-const combinationsToGenerate = config.GENERATE_PERMUTATIONS;
-const outputFile = config.EXPORT_FILE_NAME;
+const combinationsToWrite = Math.min(config.GENERATE_PERMUTATIONS, filteredCombinations.length);
+const outputFileName = config.EXPORT_FILE_NAME;
 
 // Sort combinations alphabetically before writing to the file
-const sortedCombinations = filteredResult.sort(customSort);
-fs.writeFileSync(outputFile, sortedCombinations.slice(0, combinationsToGenerate).join("\n"));
-console.log(`Combinations written to ${outputFile}.`);
+const sortedForFile = filteredCombinations.sort(sortCombinations);
+fs.writeFileSync(outputFileName, sortedForFile.slice(0, combinationsToWrite).join("\n"));
+
+// Print the actual number of combinations written to the file
+console.log(`${combinationsToWrite} combinations written to ${outputFileName}.`);
