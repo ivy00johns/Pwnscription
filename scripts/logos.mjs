@@ -1,6 +1,6 @@
-const { table } = require("table");
+import { table } from "table";
 
-function printPwnscription() {
+const printPwnscription = () => {
 	console.log(`
 ██████╗ ██╗    ██╗███╗   ██╗███████╗ ██████╗██████╗ ██╗██████╗ ████████╗██╗ ██████╗ ███╗   ██╗
 ██╔══██╗██║    ██║████╗  ██║██╔════╝██╔════╝██╔══██╗██║██╔══██╗╚══██╔══╝██║██╔═══██╗████╗  ██║
@@ -9,14 +9,14 @@ function printPwnscription() {
 ██║     ╚███╔███╔╝██║ ╚████║███████║╚██████╗██║  ██║██║██║        ██║   ██║╚██████╔╝██║ ╚████║
 ╚═╝      ╚══╝╚══╝ ╚═╝  ╚═══╝╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
 
-		|=====================================================|
-		| Github: https://github.com/ivy00johns/Pwnscription  |
-		| Twitter: @Stennett4Senate                           |
-		|=====================================================|
+	|=====================================================|
+	| Github: https://github.com/ivy00johns/Pwnscription  |
+	| Twitter: @Stennett4Senate                           |
+	|=====================================================|
 	`);
-}
+};
 
-function printPwnagetty() {
+const printPwnagetty = () => {
 	console.log(`
 ██████╗ ██╗    ██╗███╗   ██╗ █████╗  ██████╗ ███████╗████████╗████████╗██╗   ██╗
 ██╔══██╗██║    ██║████╗  ██║██╔══██╗██╔════╝ ██╔════╝╚══██╔══╝╚══██╔══╝╚██╗ ██╔╝
@@ -25,15 +25,14 @@ function printPwnagetty() {
 ██║     ╚███╔███╔╝██║ ╚████║██║  ██║╚██████╔╝███████╗   ██║      ██║      ██║   
 ╚═╝      ╚══╝╚══╝ ╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝      ╚═╝      ╚═╝   
 
-		|===============================================|
-		| Github: https://github.com/CyrisXD/Pwnagetty  |
-		| Twitter: @sudo_overflow                       |
-		|===============================================|
+	|===============================================|
+	| Github: https://github.com/CyrisXD/Pwnagetty  |
+	| Twitter: @sudo_overflow                       |
+	|===============================================|
 	`);
-}
+};
 
-// Print logo
-function printWeakpass() {
+const printWeakpass = () => {
 	console.log(`
 ██╗    ██╗███████╗ █████╗ ██╗  ██╗██████╗  █████╗ ███████╗███████╗
 ██║    ██║██╔════╝██╔══██╗██║ ██╔╝██╔══██╗██╔══██╗██╔════╝██╔════╝
@@ -47,10 +46,10 @@ function printWeakpass() {
 	| Github: https://github.com/zzzteph/weakpass      |
 	|==================================================|
 	`);
-}
+};
 
-function printCrackedNetworks(networksCracked) {
-    console.log(`
+const printCrackedNetworks = (networksCracked) => {
+	console.log(`
  ▄▄· ▄▄▄   ▄▄▄·  ▄▄· ▄ •▄ ▄▄▄ .·▄▄▄▄     ▐ ▄ ▄▄▄ .▄▄▄▄▄▄▄▌ ▐ ▄▌      ▄▄▄  ▄ •▄ .▄▄ · 
 ▐█ ▌▪▀▄ █·▐█ ▀█ ▐█ ▌▪█▌▄▌▪▀▄.▀·██▪ ██   •█▌▐█▀▄.▀·•██  ██· █▌▐█▪     ▀▄ █·█▌▄▌▪▐█ ▀. 
 ██ ▄▄▐▀▀▄ ▄█▀▀█ ██ ▄▄▐▀▀▄·▐▀▀▪▄▐█· ▐█▌  ▐█▐▐▌▐▀▀▪▄ ▐█.▪██▪▐█▐▐▌ ▄█▀▄ ▐▀▀▄ ▐▀▀▄·▄▀▀▀█▄
@@ -63,11 +62,11 @@ function printCrackedNetworks(networksCracked) {
 	} else {
 		console.log(table(networksCracked));
 	}
-}
+};
 
-module.exports = {
-    printPwnscription,
-    printPwnagetty,
+export {
+	printPwnscription,
+	printPwnagetty,
 	printWeakpass,
-    printCrackedNetworks,
+	printCrackedNetworks
 };

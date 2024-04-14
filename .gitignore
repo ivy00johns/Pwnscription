@@ -163,3 +163,4 @@ known-passwords.txt
 known-passwords.dic
 hashcat/wordlists/*
 !rockyou.txt.gz
+utils/custom-wordlist-config.js

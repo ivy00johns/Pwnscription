@@ -6,6 +6,13 @@
 ██╔═══╝ ██║███╗██║██║╚██╗██║╚════██║██║     ██╔══██╗██║██╔═══╝    ██║   ██║██║   ██║██║╚██╗██║
 ██║     ╚███╔███╔╝██║ ╚████║███████║╚██████╗██║  ██║██║██║        ██║   ██║╚██████╔╝██║ ╚████║
 ╚═╝      ╚══╝╚══╝ ╚═╝  ╚═══╝╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+
+				██╗   ██╗████████╗██╗██╗     ██╗████████╗██╗███████╗███████╗
+				██║   ██║╚══██╔══╝██║██║     ██║╚══██╔══╝██║██╔════╝██╔════╝
+				██║   ██║   ██║   ██║██║     ██║   ██║   ██║█████╗  ███████╗
+				██║   ██║   ██║   ██║██║     ██║   ██║   ██║██╔══╝  ╚════██║
+				╚██████╔╝   ██║   ██║███████╗██║   ██║   ██║███████╗███████║
+				╚═════╝    ╚═╝   ╚═╝╚══════╝╚═╝   ╚═╝   ╚═╝╚══════╝╚══════╝
 ```
 
 # DISCLAIMER
@@ -16,7 +23,8 @@
 
 # Utilities
 * `npm run passwords`: Generate a custom wordlist containing all combinations of the `WORD_LIST` in the `config.js` file.
-* `npm run combos`: Generate the results of what happens when a `.rule` file is applied to a wordlist file for a better understanding of what `.rule` files do in `hashcat`.
+* `npm run rules-combinations`: Generate the results of what happens when a `.rule` file is applied to a wordlist file for a better understanding of what `.rule` files do in `hashcat`.
+* `npm run masks-combinations`: Generate the results of what happens when a `.mask` file is applied to a wordlist file for a better understanding of what `.hcmask` files do in `hashcat`.
 
 ----
 
@@ -25,11 +33,33 @@
 	* [Custom Wordlists](#custom-wordlists)
 * [Rules](#rules)
 	* [.rule * .txt Combinations](#rule-combinations-generation)
+* [Masks](#masks)
+	* [.hcmask * .txt Combinations](#mask-combinations-generation)
 
 ----
 
 # Utilities Configuration
 1. `cp .config.example .config`
+
+----
+
+# CLI
+1. Run `npm run utils` to get started.
+	```bash
+	? Select a command to run: (Use arrow keys)
+	❯ passwords: node ../utils/passwords/generator.mjs 
+	rules-combinations: node ../utils/wordlist-rules-combinations/generator.mjs 
+	masks-combinations: node ../utils/wordlist-masks-combinations/generator.mjs 
+	Exit
+	```
+2. If you select `passwords: node ../utils/passwords/generator.mjs` you can 
+```bash
+? Select generation process: (Use arrow keys)
+❯ .config.js 
+  manual 
+  Exit 
+```
+----
 
 # Wordlists
 ## Custom Wordlists
@@ -73,7 +103,7 @@ MAX_WORDS_USED: 2, // Max number of words that can be combined to form a given s
 ----
 
 # Rules
-## Rule Combinations Generation 
+## Rule Combinations Generation
 Are you interested in what a `.rule` file generates? I've include the logic to help answer this questions.
 
 * In the `config.js` file there are a few variables to help with this process. In them you can point to specific `.rule` and `.txt` files to create a list of the results when they are combined. By default it uses the `base-word.txt` file that contains the word `password`, and points to the `base64` rule set.
@@ -107,5 +137,16 @@ Are you interested in what a `.rule` file generates? I've include the logic to h
 
 ----
 
+# Masks
+## Mask Combinations Generation
+Are you interested in what a `.hcmask` file generates? I've include the logic to help answer this questions.
+
+
+
+----
+
 # TO-DO
 - [ ] Add tooling to calculate combinations for different attacks.
+- [ ] Update README with examples and CLI commands.
+- [ ] Update utils so that you can enter custom sort params.
+- [ ] Add the ability to save the custom config file. Add it to .gitignore.

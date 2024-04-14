@@ -5,10 +5,10 @@ import inquirer from "inquirer";
 import { execSync } from "child_process";
 
 // CLI components
-const Spinner = CLI.Spinner;
+const { Spinner } = CLI;
 
 // Function to get available commands from package.json
-function getAvailableCommands() {
+const getAvailableCommands = () => {
 	const packageJsonPath = "./utils/package.json";
 
 	try {
@@ -18,7 +18,7 @@ function getAvailableCommands() {
 		if (scripts) {
 			return Object.keys(scripts).map((script) => ({
 				name: `${script}: ${packageJsonData.scripts[script]}`,
-				value: script,
+				value: script
 			}));
 		} else {
 			console.error(chalk.red("No scripts found in ./utils/package.json."));
@@ -28,10 +28,10 @@ function getAvailableCommands() {
 		console.error(chalk.red(`Error reading ${packageJsonPath}: ${error.message}`));
 		process.exit(1);
 	}
-}
+};
 
 // Function to run a command using npm
-async function runCommand(command) {
+const runCommand = (command) => {
 	try {
 		execSync(`npm run --prefix ./utils ${command}`, {
 			stdio: "inherit"
@@ -39,9 +39,9 @@ async function runCommand(command) {
 	} catch (error) {
 		console.error(chalk.red(`Error running command: ${error.message}`));
 	}
-}
+};
 
-async function run() {
+const run = async () => {
 	const availableCommands = getAvailableCommands();
 	const {
 		command
@@ -68,6 +68,6 @@ async function run() {
 			runCommand(command);
 		}, 500);
 	}
-}
+};
 
 run();

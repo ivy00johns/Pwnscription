@@ -335,22 +335,6 @@ To generate the necessary `.hc22000`/`.pmkid` files needed to crack the WiFi han
 ### Windows - Generate
 * `npm run vagrant-up`
 
-#### Issue
-* When you run the `npm run generate` command you will see the following message that I am trying to resolve. It says it found no files when it did indeed generate the files.
-	```bash
-	Skipping: .gitkeep
-	.gitkeep successfully skipped.
-
-	Processing: EXAMPLE_c8d71922525c.pcap
-	No PMKID or HCCAPX found.
-
-	Processing: EXAMPLE_3c7a8a78adb8.pcap
-	No PMKID or HCCAPX found.
-
-	Processing: EXAMPLE_a41162403502.pcap
-	No PMKID or HCCAPX found.
-	```
-
 ## CLI
 Are you looking to build and execute `hashcat` commands quickly based on the files you've already generated? Well you are in luck, I have added `cli` tooling to do just that. 
 
@@ -639,11 +623,10 @@ Stopped: Sun Nov 12 20:02:49 2023
 ----
 
 # TO-DO
-- [ ] Correct the counters staying at 0 even though keys are located and files are generated.
-	```bash
-	Processing: EXAMPLE_c8d71922525c.pcap
-	No PMKID or HCCAPX found.
-	```
 - [ ] Find better names for the functions and commands.
 - [ ] Add Flipper Zero notes.
 - [ ] Add Flipper Zero support.
+- [ ] Modernize everything. There is a mixture of syntaxes.
+- [ ] Move common functions to a single file.
+- [ ] Add hash generation logic.
+- [ ] Add logic to enter password hints via the CLI, with the ability to save a custom config file.

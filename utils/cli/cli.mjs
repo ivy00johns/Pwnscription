@@ -1,13 +1,15 @@
-import chalk from "chalk";
-import inquirer from "inquirer";
-import CLI from "clui";
+#!/usr/bin/env node
+
 import fs from "fs";
-import { execSync } from "child_process";
+import CLI from "clui";
+import path from "path";
+import chalk from "chalk";
+import { dirname } from "path";
+import inquirer from "inquirer";
 import clipboardy from "clipboardy";
 import { fileURLToPath } from "url";
-import { dirname } from "path";
-import * as path from "path";
 import config from "../../config.js";
+import { execSync } from "child_process";
 
 // Get the current file and directory names
 const __filename = fileURLToPath(import.meta.url);
@@ -23,13 +25,7 @@ const Spinner = CLI.Spinner;
 const randomNumber = Math.floor(Math.random() * 1000);
 
 // Hashcat command path
-let hashcat;
-
-if (config.WINDOWS) {
-	hashcat = `cd ${config.HASHCAT_PATH} && hashcat`;
-} else {
-	hashcat = "hashcat";
-}
+const hashcatCommand = config.WINDOWS ? `cd ${config.HASHCAT_PATH} && hashcat` : "hashcat";
 
 // Function to get available commands from package.json
 function getAvailableCommands() {
@@ -86,7 +82,7 @@ async function runCommandOrCopyToClipboard(command) {
 }
 
 // Function to run a command using npm
-async function runCommand(command) {
+async function runNpmCommand(command) {
 	try {
 		execSync(`npm run ${command}`, {
 			stdio: "inherit"
@@ -136,17 +132,16 @@ async function run() {
 				console.log(chalk.green(`You selected: ${command}`));
 
 				// Run the selected command
-				runCommand(command);
+				runNpmCommand(command);
 			}, 500);
 		}
 	}
-
 	if (commandType === "Custom Commands") {
-		const exclusions    = [".gitkeep", ".gz"];
-		const hccapxFiles   = fs.readdirSync(config.LOCAL_HCCAPX_DIRECTORY).filter(file => exclusions.every(exclusion => !file.includes(exclusion)));
-		const wordlistFiles = fs.readdirSync(config.LOCAL_WORLISTS_DIRECTORY).filter(file => exclusions.every(exclusion => !file.includes(exclusion)));
-		const rulesFiles    = fs.readdirSync(config.LOCAL_RULES_DIRECTORY).filter(file => exclusions.every(exclusion => !file.includes(exclusion)));
-		const masksFiles    = fs.readdirSync(config.LOCAL_MASKS_DIRECTORY).filter(file => exclusions.every(exclusion => !file.includes(exclusion)));
+		const fileExclusions = [".gitkeep", ".gz", ".torrent", ".7z", "._"];
+		const hccapxFiles    = fs.readdirSync(config.LOCAL_HCCAPX_DIRECTORY).filter(file => fileExclusions.every(exclusion => !file.includes(exclusion)));
+		const wordlistFiles  = fs.readdirSync(config.LOCAL_WORLISTS_DIRECTORY).filter(file => fileExclusions.every(exclusion => !file.includes(exclusion)));
+		const rulesFiles     = fs.readdirSync(config.LOCAL_RULES_DIRECTORY).filter(file => fileExclusions.every(exclusion => !file.includes(exclusion)));
+		const masksFiles     = fs.readdirSync(config.LOCAL_MASKS_DIRECTORY).filter(file => fileExclusions.every(exclusion => !file.includes(exclusion)));
 
 		if (hccapxFiles.length === 0) {
 			console.log(chalk.yellow(`No hccapx .hc22000 files found. Please run "npm run generate".`));
@@ -162,7 +157,7 @@ async function run() {
 			type: "rawlist",
 			name: "selectedHccapx",
 			message: "Select an .hccapx file:",
-			choices: [...hccapxFiles]
+			choices: hccapxFiles
 		}, {
 			type: "rawlist",
 			name: "selectedWordlist",
@@ -187,7 +182,7 @@ async function run() {
 				type: "rawlist",
 				name: "selectedMaskFile",
 				message: "Select a .hcmask file:",
-				choices: [...masksFiles]
+				choices: masksFiles
 			}]);
 
 			const customCommand = await generateCustomCommand(selectedHccapx, selectedWordlist, selectedRules, true, selectedMaskFile);
@@ -245,40 +240,40 @@ async function generateCustomCommand(hccapx, wordlist, rules, useMasks, customMa
 		if (useMasks) {
 			// --attack-mode=0/9 - .hc22000 X .rule X .txt X .hcmask
 			const { attackMode } = await generatePrompt([0, 9], 9);
-			return `${hashcat} --hash-type=${config.HASH_TYPE} --attack-mode=${attackMode} --session ${sessionName} --hwmon-temp-abort=${config.ABORT_TEMPERATURE} -w ${config.ABORT_WAIT_TIME} --potfile-path "${potfilePath}" --outfile "${outputPath}" "${hccapxPath}" --rules-file="${rulePath}" "${wordlistPath}" "${maskPath}"`;
+			return `${hashcatCommand} --hash-type=${config.HASH_TYPE} --attack-mode=${attackMode} --session ${sessionName} --hwmon-temp-abort=${config.ABORT_TEMPERATURE} -w ${config.ABORT_WAIT_TIME} --potfile-path "${potfilePath}" --outfile "${outputPath}" "${hccapxPath}" --rules-file="${rulePath}" "${wordlistPath}" "${maskPath}"`;
 		} else {
 			// --attack-mode=0/9 - .hc22000 X .rule X .txt
 			const { attackMode } = await generatePrompt([0, 9], 9);
-			return `${hashcat} --hash-type=${config.HASH_TYPE} --attack-mode=${attackMode} --session ${sessionName} --hwmon-temp-abort=${config.ABORT_TEMPERATURE} -w ${config.ABORT_WAIT_TIME} --potfile-path "${potfilePath}" --outfile "${outputPath}" "${hccapxPath}" --rules-file="${rulePath}" "${wordlistPath}"`;
+			return `${hashcatCommand} --hash-type=${config.HASH_TYPE} --attack-mode=${attackMode} --session ${sessionName} --hwmon-temp-abort=${config.ABORT_TEMPERATURE} -w ${config.ABORT_WAIT_TIME} --potfile-path "${potfilePath}" --outfile "${outputPath}" "${hccapxPath}" --rules-file="${rulePath}" "${wordlistPath}"`;
 		}
 	} else if (wordlist === "NONE" && rules !== "NONE") {
 		if (useMasks) {
 			// --attack-mode=0/9 - .hc22000 X .rule X .hcmask
 			const { attackMode } = await generatePrompt([0, 9], 9);
-			return `${hashcat} --hash-type=${config.HASH_TYPE} --attack-mode=${attackMode} --session ${sessionName} --hwmon-temp-abort=${config.ABORT_TEMPERATURE} -w ${config.ABORT_WAIT_TIME} --potfile-path "${potfilePath}" --outfile "${outputPath}" "${hccapxPath}" --rules-file="${rulePath}" "${maskPath}"`;
+			return `${hashcatCommand} --hash-type=${config.HASH_TYPE} --attack-mode=${attackMode} --session ${sessionName} --hwmon-temp-abort=${config.ABORT_TEMPERATURE} -w ${config.ABORT_WAIT_TIME} --potfile-path "${potfilePath}" --outfile "${outputPath}" "${hccapxPath}" --rules-file="${rulePath}" "${maskPath}"`;
 		} else {
 			// --attack-mode=0 - .hc22000 X .rule
-			return `${hashcat} --hash-type=${config.HASH_TYPE} --attack-mode=0 --session ${sessionName} --hwmon-temp-abort=${config.ABORT_TEMPERATURE} -w ${config.ABORT_WAIT_TIME} --potfile-path "${potfilePath}" --outfile "${outputPath}" "${hccapxPath}" --rules-file="${rulePath}"`;
+			return `${hashcatCommand} --hash-type=${config.HASH_TYPE} --attack-mode=0 --session ${sessionName} --hwmon-temp-abort=${config.ABORT_TEMPERATURE} -w ${config.ABORT_WAIT_TIME} --potfile-path "${potfilePath}" --outfile "${outputPath}" "${hccapxPath}" --rules-file="${rulePath}"`;
 		}
 	} else if (wordlist !== "NONE" && rules === "NONE") {
 		if (useMasks) {
 			// --attack-mode=0/3/6/7/9 - .hc22000 X .txt X .hcmask
 			const { attackMode } = await generatePrompt([0, 3, 6, 7, 9], 6);
-			return `${hashcat} --hash-type=${config.HASH_TYPE} --attack-mode=${attackMode} --session ${sessionName} --hwmon-temp-abort=${config.ABORT_TEMPERATURE} -w ${config.ABORT_WAIT_TIME} --potfile-path "${potfilePath}" --outfile "${outputPath}" "${hccapxPath}" "${wordlistPath}" "${maskPath}"`
+			return `${hashcatCommand} --hash-type=${config.HASH_TYPE} --attack-mode=${attackMode} --session ${sessionName} --hwmon-temp-abort=${config.ABORT_TEMPERATURE} -w ${config.ABORT_WAIT_TIME} --potfile-path "${potfilePath}" --outfile "${outputPath}" "${hccapxPath}" "${wordlistPath}" "${maskPath}"`
 		} else {
 			// --attack-mode=0/3/9 - .hc22000 X .txt
 			const { attackMode } = await generatePrompt([0, 3, 9], 0);
-			return `${hashcat} --hash-type=${config.HASH_TYPE} --attack-mode=${attackMode} --session ${sessionName} --hwmon-temp-abort=${config.ABORT_TEMPERATURE} -w ${config.ABORT_WAIT_TIME} --potfile-path "${potfilePath}" --outfile "${outputPath}" "${hccapxPath}" "${wordlistPath}"`
+			return `${hashcatCommand} --hash-type=${config.HASH_TYPE} --attack-mode=${attackMode} --session ${sessionName} --hwmon-temp-abort=${config.ABORT_TEMPERATURE} -w ${config.ABORT_WAIT_TIME} --potfile-path "${potfilePath}" --outfile "${outputPath}" "${hccapxPath}" "${wordlistPath}"`
 		}
 	} else if (wordlist === "NONE" && rules === "NONE") {
 		if (useMasks) {
 			// --attack-mode=0/3/9 - .hc22000 X .hcmask
 			const { attackMode } = await generatePrompt([0, 3, 9], 3);
-			return `${hashcat} --hash-type=${config.HASH_TYPE} --attack-mode=${attackMode} --session ${sessionName} --hwmon-temp-abort=${config.ABORT_TEMPERATURE} -w ${config.ABORT_WAIT_TIME} --potfile-path "${potfilePath}" --outfile "${outputPath}" "${hccapxPath}" "${maskPath}"`
+			return `${hashcatCommand} --hash-type=${config.HASH_TYPE} --attack-mode=${attackMode} --session ${sessionName} --hwmon-temp-abort=${config.ABORT_TEMPERATURE} -w ${config.ABORT_WAIT_TIME} --potfile-path "${potfilePath}" --outfile "${outputPath}" "${hccapxPath}" "${maskPath}"`
 		} else {
 			// --attack-mode=0/3 - .hc22000
 			const { attackMode } = await generatePrompt([0, 3], 0);
-			return `${hashcat} --hash-type=${config.HASH_TYPE} --attack-mode=${attackMode} --session ${sessionName} --hwmon-temp-abort=${config.ABORT_TEMPERATURE} -w ${config.ABORT_WAIT_TIME} --potfile-path "${potfilePath}" --outfile "${outputPath}" "${hccapxPath}"`
+			return `${hashcatCommand} --hash-type=${config.HASH_TYPE} --attack-mode=${attackMode} --session ${sessionName} --hwmon-temp-abort=${config.ABORT_TEMPERATURE} -w ${config.ABORT_WAIT_TIME} --potfile-path "${potfilePath}" --outfile "${outputPath}" "${hccapxPath}"`
 		}
 	} else {
 		console.log(`No command present.`);
