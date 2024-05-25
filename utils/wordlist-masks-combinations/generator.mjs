@@ -79,7 +79,7 @@ const generate = async (data, masks) => {
 
 // Function to generate and save masked words
 const generateAndSave = async () => {
-	const fileExclusions = [".gitkeep", ".gz"]; // Corrected variable name
+	const fileExclusions = [".gitkeep", ".gz"];
 	const wordlistFiles = (
 		await fs.readdir(config.LOCAL_WORLISTS_DIRECTORY)
 	).filter((file) => fileExclusions.every((exclusion) => !file.includes(exclusion)));
@@ -87,7 +87,7 @@ const generateAndSave = async () => {
 		await fs.readdir(config.LOCAL_MASKS_DIRECTORY)
 	).filter((file) => fileExclusions.every((exclusion) => !file.includes(exclusion)));
 
-	const { selectedWordlist, selectedMask } = await inquirer.prompt([
+	const { selectedWordlist, selectedMaskFile } = await inquirer.prompt([
 		{
 			type: "rawlist",
 			name: "selectedWordlist",
@@ -96,21 +96,18 @@ const generateAndSave = async () => {
 		},
 		{
 			type: "rawlist",
-			name: "selectedMask",
+			name: "selectedMaskFile",
 			message: "Select a mask file:",
 			choices: ["ALL", ...maskFiles, "Exit"],
 		},
 	]);
 
-	console.log(`Wordlist File: ${selectedWordlist}`);
-	console.log(`Mask File: ${selectedMask}`);
-
-	if (selectedWordlist === "Exit" || selectedMask === "Exit") {
+	if (selectedWordlist === "Exit" || selectedMaskFile === "Exit") {
 		console.log(chalk.yellow("Goodbye!"));
 		process.exit(0);
 	}
 
-	if (selectedMask === "ALL") {
+	if (selectedMaskFile === "ALL") {
 		// Process all mask files
 		for (const wordlist of wordlistFiles) {
 			for (const maskFile of maskFiles) {
@@ -160,49 +157,58 @@ const generateAndSave = async () => {
 		}
 	} else {
 		// Process a single mask file
-		for (const wordlist of wordlistFiles) {
-			const inputData = await readFile(
+		// Remove the loop for wordlistFiles, we only need to process one
+		let inputData;
+		if (selectedWordlist === "base-word.txt") {
+			// Read base-word.txt from the script's directory
+			inputData = await readFile(
+				path.join(__dirname, "..", selectedWordlist)
+			);
+		} else {
+			// Read other wordlists from the specified directory
+			inputData = await readFile(
 				path.join(
 					__dirname,
 					"..",
 					config.LOCAL_WORLISTS_DIRECTORY,
-					wordlist
+					selectedWordlist
 				)
 			);
-			const maskData = await readMasks(
-				path.join(
-					__dirname,
-					"..",
-					config.LOCAL_MASKS_DIRECTORY,
-					selectedMask
-				)
+		}
+
+		const maskData = await readMasks(
+			path.join(
+				__dirname,
+				"..",
+				config.LOCAL_MASKS_DIRECTORY,
+				selectedMaskFile
+			)
+		);
+
+		const result = await generate(inputData, maskData);
+
+		const outputFileName = `${path.basename(
+			selectedWordlist,
+			path.extname(selectedWordlist)
+		)}-${path.basename(selectedMaskFile, path.extname(selectedMaskFile))}-${
+			config.GENERIC_MASKS_RESULTS_FILENAME
+		}`;
+		const outputPath = path.join(
+			config.WORDLIST_MASKS_RESULTS_DIRECTORY,
+			outputFileName
+		);
+
+		try {
+			await fs.writeFile(outputPath, result);
+			console.log(
+				`Generation successful for ${outputFileName}. Lines written: ${result.split(
+					"\n"
+				).length}`
 			);
-
-			const result = await generate(inputData, maskData);
-
-			const outputFileName = `${path.basename(
-				wordlist,
-				path.extname(wordlist)
-			)}-${path.basename(selectedMask, path.extname(selectedMask))}-${
-				config.GENERIC_MASKS_RESULTS_FILENAME
-			}`;
-			const outputPath = path.join(
-				config.WORDLIST_MASKS_RESULTS_DIRECTORY,
-				outputFileName
+		} catch (error) {
+			console.error(
+				`Error writing to ${outputFileName}: ${error.message}`
 			);
-
-			try {
-				await fs.writeFile(outputPath, result);
-				console.log(
-					`Generation successful for ${outputFileName}. Lines written: ${result.split(
-						"\n"
-					).length}`
-				);
-			} catch (error) {
-				console.error(
-					`Error writing to ${outputFileName}: ${error.message}`
-				);
-			}
 		}
 	}
 };
