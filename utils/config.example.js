@@ -9,6 +9,7 @@ module.exports = {
 	EXPORT_FILE_NAME: "../hashcat/wordlists/generated-passwords.txt", // Name of the exported file
 	WORD_LIST: [], // List of words for generation
 	MAX_WORDS_USED: 6, // Max number of words that can be combined to form a given string
+	DEFAULT_CUSTOM_WORDLIST_FILENAME: "custom-wordlist-config.js",
 
 	// Sorting configurations
 	SORT_BY_LENGTH: false, // Whether to sort permutations by length
@@ -24,6 +25,6 @@ module.exports = {
 	TEST_MASKS_WORD_LIST: "../utils/base-word.txt",
 	WORDLIST_RULES_RESULTS_DIRECTORY: "../utils/wordlist-rules-combinations/results",
 	WORDLIST_MASKS_RESULTS_DIRECTORY: "../utils/wordlist-masks-combinations/results",
-  	GENERIC_RULES_RESULTS_FILENAME: "wordlist-rules-combinations.txt",
-	GENERIC_MASKS_RESULTS_FILENAME: "wordlist-masks-combinations.txt"
+  	GENERIC_RULES_RESULTS_FILENAME: "wordlist+rules.txt",
+	GENERIC_MASKS_RESULTS_FILENAME: "wordlist+masks.txt"
 };
