@@ -107,57 +107,62 @@ const generateAndSave = async () => {
 		process.exit(0);
 	}
 
+	let inputData; 
+	if (selectedWordlist === "base-word.txt") {
+		inputData = await readFile(
+			path.join(__dirname, "..", selectedWordlist)
+		);
+	} else {
+		inputData = await readFile(
+			path.join(
+				__dirname,
+				"..",
+				config.LOCAL_WORLISTS_DIRECTORY,
+				selectedWordlist
+			)
+		);
+	}
+
 	if (selectedMaskFile === "ALL") {
 		// Process all mask files
-		for (const wordlist of wordlistFiles) {
-			for (const maskFile of maskFiles) {
-				const inputData = await readFile(
-					path.join(
-						__dirname,
-						"..",
-						config.LOCAL_WORLISTS_DIRECTORY,
-						wordlist
-					)
-				);
-				const maskData = await readMasks(
-					path.join(
-						__dirname,
-						"..",
-						config.LOCAL_MASKS_DIRECTORY,
-						maskFile
-					)
-				);
+		for (const maskFile of maskFiles) {
+			const maskData = await readMasks( // Moved maskData reading here
+				path.join(
+					__dirname,
+					"..",
+					config.LOCAL_MASKS_DIRECTORY,
+					maskFile
+				)
+			);
 
-				const result = await generate(inputData, maskData);
+			const result = await generate(inputData, maskData);
 
-				const outputFileName = `${path.basename(
-					wordlist,
-					path.extname(wordlist)
-				)}-${path.basename(maskFile, path.extname(maskFile))}-${
-					config.GENERIC_MASKS_RESULTS_FILENAME
-				}`;
-				const outputPath = path.join(
-					config.WORDLIST_MASKS_RESULTS_DIRECTORY,
-					outputFileName
+			const outputFileName = `${path.basename(
+				selectedWordlist,
+				path.extname(selectedWordlist)
+			)}-${path.basename(maskFile, path.extname(maskFile))}-${
+				config.GENERIC_MASKS_RESULTS_FILENAME
+			}`;
+			const outputPath = path.join(
+				config.WORDLIST_MASKS_RESULTS_DIRECTORY,
+				outputFileName
+			);
+
+			try {
+				await fs.writeFile(outputPath, result);
+				console.log(
+					`Generation successful for ${outputFileName}. Lines written: ${result.split(
+						"\n"
+					).length}`
 				);
-
-				try {
-					await fs.writeFile(outputPath, result);
-					console.log(
-						`Generation successful for ${outputFileName}. Lines written: ${result.split(
-							"\n"
-						).length}`
-					);
-				} catch (error) {
-					console.error(
-						`Error writing to ${outputFileName}: ${error.message}`
-					);
-				}
+			} catch (error) {
+				console.error(
+					`Error writing to ${outputFileName}: ${error.message}`
+				);
 			}
 		}
 	} else {
 		// Process a single mask file
-		// Remove the loop for wordlistFiles, we only need to process one
 		let inputData;
 		if (selectedWordlist === "base-word.txt") {
 			// Read base-word.txt from the script's directory
